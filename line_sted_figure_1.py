@@ -109,11 +109,12 @@ def generate_psfs(
     Calculate excitation PSFs. Pixel values encode fluence per pulse, in
     saturation units.
     """
-    excitation_psf_point = np.zeros(shape) #Used even if pst_type == 'line'
-    excitation_psf_point[0, shape[1]//2, shape[2]//2] = 1
-    excitation_psf_point = gaussian_filter(excitation_psf_point,
-                                           sigma=blur_sigma)
-    excitation_psf_point *= excitation_brightness / excitation_psf_point.max()
+    if psf_type == 'point':
+        excitation_psf_point = np.zeros(shape)
+        excitation_psf_point[0, shape[1]//2, shape[2]//2] = 1
+        excitation_psf_point = gaussian_filter(excitation_psf_point,
+                                               sigma=blur_sigma)
+        excitation_psf_point *= excitation_brightness / excitation_psf_point.max()
     if psf_type == 'line':
         excitation_psf_line = np.zeros(shape)
         excitation_psf_line[0, :, shape[2]//2] = 1
@@ -125,20 +126,26 @@ def generate_psfs(
     saturation units.
     """
     if psf_type == 'point':
-        depletion_psf_point = gaussian_filter(
-            excitation_psf_point,
-            sigma=blur_sigma)
+        depletion_psf_inner = np.zeros(shape)
+        depletion_psf_inner[0, shape[1]//2, shape[2]//2] = 1
+        depletion_psf_inner = gaussian_filter(depletion_psf_inner,
+                                              sigma=blur_sigma)
+        depletion_psf_outer = gaussian_filter(depletion_psf_inner,
+                                              sigma=blur_sigma)
         depletion_psf_point = (
-            (depletion_psf_point / depletion_psf_point.max()) -
-            (excitation_psf_point / excitation_psf_point.max()))
+            (depletion_psf_outer / depletion_psf_outer.max()) -
+            (depletion_psf_inner / depletion_psf_inner.max()))
         depletion_psf_point *= depletion_brightness  / depletion_psf_point.max()
     elif psf_type == 'line':
-        depletion_psf_line = gaussian_filter(
-            excitation_psf_line,
-            sigma=(0, 0, blur_sigma))
+        depletion_psf_inner = np.zeros(shape)
+        depletion_psf_inner[0, :, shape[2]//2] = 1
+        depletion_psf_inner = gaussian_filter(depletion_psf_inner,
+                                              sigma=(0, 0, blur_sigma))
+        depletion_psf_outer = gaussian_filter(depletion_psf_inner,
+                                              sigma=(0, 0, blur_sigma))
         depletion_psf_line = (
-            (depletion_psf_line / depletion_psf_line.max()) -
-            (excitation_psf_line / excitation_psf_line.max()))
+            (depletion_psf_outer / depletion_psf_outer.max()) -
+            (depletion_psf_inner / depletion_psf_inner.max()))
         depletion_psf_line *= depletion_brightness / depletion_psf_line.max()
     """
     Calculate saturated PSFs. Pixel values encode probability per pulse
@@ -181,9 +188,9 @@ def generate_psfs(
         if verbose: print(" Rescan ratio: %0.5f"%(rescan_ratio))
         rescan_ratio = int(np.round(rescan_ratio))
         if verbose: print(" Neareset integer:", rescan_ratio)
-        point_obj = np.zeros_like(excitation_psf_point)
+        point_obj = np.zeros(shape)
         point_obj[0, point_obj.shape[1]//2, point_obj.shape[2]//2] = 1
-        emission_psf = excitation_psf_point.copy() #No Stokes shift
+        emission_psf = gaussian_filter(point_obj, sigma=blur_sigma)
         rescanned_signal_inst = np.zeros((
             point_obj.shape[0],
             point_obj.shape[1],
@@ -222,49 +229,49 @@ def generate_psfs(
                 int(rescan_ratio)
                 ).sum(axis=3)
     if save:
-        if not os.path.exists('intermediate_psfs'):
-            os.mkdir('intermediate_psfs')
+        if not os.path.exists('Figure_1_output/intermediate_psfs'):
+            os.mkdir('Figure_1_output/intermediate_psfs')
         if psf_type == 'point':
             np_tif.array_to_tif(
                 excitation_psf_point,
-                'intermediate_psfs/excitation_psf_point.tif')
+                'Figure_1_output/intermediate_psfs/excitation_psf_point.tif')
             np_tif.array_to_tif(
                 depletion_psf_point,
-                'intermediate_psfs/depletion_psf_point.tif')
+                'Figure_1_output/intermediate_psfs/depletion_psf_point.tif')
             np_tif.array_to_tif(
                 saturated_excitation_psf_point,
-                'intermediate_psfs/excitation_fraction_psf_point.tif')
+                'Figure_1_output/intermediate_psfs/excitation_fraction_psf_point.tif')
             np_tif.array_to_tif(
                 saturated_depletion_psf_point,
-                'intermediate_psfs/depletion_fraction_psf_point.tif')
+                'Figure_1_output/intermediate_psfs/depletion_fraction_psf_point.tif')
             np_tif.array_to_tif(
                 sted_psf_point,
-                'intermediate_psfs/sted_psf_point.tif')
+                'Figure_1_output/intermediate_psfs/sted_psf_point.tif')
         elif psf_type == 'line':
             np_tif.array_to_tif(
                 excitation_psf_line,
-                'intermediate_psfs/excitation_psf_line.tif')
+                'Figure_1_output/intermediate_psfs/excitation_psf_line.tif')
             np_tif.array_to_tif(
                 depletion_psf_line,
-                'intermediate_psfs/depletion_psf_line.tif')
+                'Figure_1_output/intermediate_psfs/depletion_psf_line.tif')
             np_tif.array_to_tif(
                 saturated_excitation_psf_line,
-                'intermediate_psfs/excitation_fraction_psf_line.tif')
+                'Figure_1_output/intermediate_psfs/excitation_fraction_psf_line.tif')
             np_tif.array_to_tif(
                 saturated_depletion_psf_line,
-                'intermediate_psfs/depletion_fraction_psf_line.tif')
+                'Figure_1_output/intermediate_psfs/depletion_fraction_psf_line.tif')
             np_tif.array_to_tif(
                 sted_psf_line,
-                'intermediate_psfs/sted_psf_line.tif')
+                'Figure_1_output/intermediate_psfs/sted_psf_line.tif')
             np_tif.array_to_tif(
                 emission_psf,
-                'intermediate_psfs/emission_psf.tif')
+                'Figure_1_output/intermediate_psfs/emission_psf.tif')
             np_tif.array_to_tif(
                 rescanned_signal_cumu,
-                'intermediate_psfs/sted_psf_line_rescan_unscaled.tif')
+                'Figure_1_output/intermediate_psfs/sted_psf_line_rescan_unscaled.tif')
             np_tif.array_to_tif(
                 rescanned_line_sted_psf,
-                'intermediate_psfs/sted_psf_line_rescan.tif')
+                'Figure_1_output/intermediate_psfs/sted_psf_line_rescan.tif')
     if psf_type == 'point':
         return {
             'excitation': excitation_psf_point,
@@ -501,14 +508,14 @@ def intensity_line_plots():
             (psfs['point']['excitation'],
              psfs['point']['depletion']),
             axis=0),
-            'point_psfs.tif',
+            'Figure_1_output/point_psfs.tif',
         channels=2, slices=1)
     np_tif.array_to_tif(
         np.concatenate(
             (psfs['line']['excitation'],
              psfs['line']['depletion']),
             axis=0),
-            'line_psfs.tif',
+            'Figure_1_output/line_psfs.tif',
         channels=2, slices=1)
     def norm(x):
         return (x - x.min()) / x.max()
@@ -527,7 +534,7 @@ def intensity_line_plots():
     plt.plot(norm(psfs['point']['depletion'][0, which_line, :]),
              'go', label='Donut depletion', linewidth=3)
     plt.legend(fontsize=10, loc='lower right')
-    plt.savefig('Fig_1_psf_plots.png')
+    plt.savefig('Figure_1_output/Fig_1_psf_plots.png')
     fig.show()
 
 def sted_dose_plots():
@@ -616,6 +623,7 @@ def sted_dose_plots():
     ax2.legend(loc='lower right', fontsize=9)
     ax2.grid()
     ax2.grid(True, which='minor', axis='y')
+    plt.savefig('Figure_1_output/Fig_1_dose_plots.png')
     plt.show()
 
 if __name__ == '__main__':
