@@ -54,7 +54,7 @@ Inputs to psf_report():
  . Number of excitation/depletion pulses delivered per scan position.
    Increase this to increase emitted signal, but at the cost of
    increasing both the excitaiton dose and the depletion dose.
-   Alternatively, you could increase the excitation fluence to incrase
+   Alternatively, you could increase the excitation fluence to increase
    emitted signal, but of course this saturates at high fluence.
 Outputs:
  . PSF. The PSF shape encodes the resolution, and the PSF magnitude
