@@ -187,7 +187,7 @@ def generate_psfs(
         rescan_ratio = (emission_sigma / line_sted_sigma)**2 + 1
         if verbose: print(" Rescan ratio: %0.5f"%(rescan_ratio))
         rescan_ratio = int(np.round(rescan_ratio))
-        if verbose: print(" Neareset integer:", rescan_ratio)
+        if verbose: print(" Nearest integer:", rescan_ratio)
         point_obj = np.zeros(shape)
         point_obj[0, point_obj.shape[1]//2, point_obj.shape[2]//2] = 1
         emission_psf = gaussian_filter(point_obj, sigma=blur_sigma)
