@@ -15,7 +15,7 @@ Assumptions:
    pulse fluence is all that matters)
  . Pulse repetition rate is long compared to fluorescent (and triplet)
    lifetime (meaning, I'm not going to worry about triplet-state
-   excitatation, effects relevant to T-REX are orthogonal to the method
+   excitation, effects relevant to T-REX are orthogonal to the method
    we're describing)
  . Emission PSF is Gaussian (Exact PSF shape is not an interesting detail)
  . Excitation illumination shape is Gaussian, same width as emission PSF
