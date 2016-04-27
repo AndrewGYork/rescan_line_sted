@@ -487,7 +487,7 @@ def intensity_line_plots():
     max_excitation_brightness=0.5
     steps_per_improved_psf_width=9
     psfs = {}
-    print("Calculating PSFs...")
+    print("Calculating PSFs... (this takes a while)")
     point_results = tune_psf(
         illumination_shape='point',
         desired_resolution_improvement=desired_resolution_improvement,
