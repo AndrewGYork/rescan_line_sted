@@ -1,3 +1,6 @@
+# This isn't the 'real' version of np_tif! It's just here for the record.
+# The 'real', up-to-date version is here: 
+# https://github.com/AndrewGYork/tools/blob/master/np_tif.py
 import numpy as np
 
 def tif_to_array(
