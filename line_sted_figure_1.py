@@ -1,10 +1,10 @@
 import os
 import numpy as np
 import matplotlib.pyplot as plt
-from line_sted_figure_1 import psf_report
+from line_sted_tools import psf_report
 
 def main():
-    illumination_shapes = ['point', 'line']
+    illumination_shapes = ['line', 'point']
     excitation_brightnesses = [0.25, 1, 4]
     depletion_brightnesses = [0, 1,  3, 9, 27]
     sampling_rates = [4, 6, 8, 12]
@@ -66,6 +66,7 @@ def create_figure(
     # Plotting
     ###################
     fig = plt.figure(figsize=(20, 5), dpi=100)
+    fig.text(x=0.23, y=0.02, s="(d)", fontsize=15)
     fig.text(x=0.25, y=-0.01, s='' + 
         "Excitation dose:%8s\n"%(
             '%0.2f'%report['excitation_dose']) +
@@ -76,6 +77,7 @@ def create_figure(
         res_improvement = report['resolution_improvement']
     elif illumination_shape == 'line':
         res_improvement = report['resolution_improvement_no_rescan']
+    fig.text(x=0.41, y=0.02, s="(e)", fontsize=15)
     fig.text(x=0.43, y=-0.01, s='' +
         " Emissions:%5s per molecule\n"%(
             '%0.2f'%report['expected_emission']) +
@@ -87,7 +89,7 @@ def create_figure(
     # with sample points overlayed:
     #####
     ax = plt.subplot(2, 3, 1)
-    plt.title("Illumination brightness")
+    plt.title("(a) Illumination brightness")
     # Excitation
     ax.plot(fine_excitation[fine_excitation.shape[0]//2, :],
             c='blue', linestyle=':', linewidth=3)
@@ -97,7 +99,7 @@ def create_figure(
     ax.set_ylabel('Excitation fluence per pulse', color='blue')
     plt.ylim(0, fine_excitation[fine_excitation.shape[0]//2, :].max())
     # Sample points overlayed
-    ax.set_xlabel('Scan positions', color='gray')
+    ax.set_xlabel('Scan position')
     for x in set(sample_points_x):
         ax.axvline(x, ymin=0, ymax=0.1, c='gray')
     # Depletion
@@ -113,6 +115,7 @@ def create_figure(
     #####
     ax = plt.subplot(2, 3, 4)
     def norm(x):
+        if x.max() == x.min(): return np.zeros_like(x)
         return (x - x.min()) / (x.max() - x.min())
     rgb = np.zeros(fine_excitation.shape + (3,))
     rgb[:, :, 2] = norm(fine_excitation)
@@ -128,7 +131,7 @@ def create_figure(
     # with sample points overlayed:
     #####
     ax = plt.subplot(2, 3, 2)
-    plt.title("Transition probability")
+    plt.title("(b) Transition probability")
     # Excitation
     ax.plot(fine_excitation_frac[fine_excitation_frac.shape[0]//2, :],
             color='blue', linestyle=':', label=' Pre-depletion', linewidth=3)
@@ -140,7 +143,7 @@ def create_figure(
     ax.set_ylabel('Excitation probability per pulse', color='blue')
     plt.ylim(0, 1.19)
     # Sample points overlayed
-    ax.set_xlabel('Scan positions', color='gray')
+    ax.set_xlabel('Scan position')
     for x in set(sample_points_x):
         ax.axvline(x, ymin=0, ymax=0.1, c='gray')
     # Depletion
@@ -174,7 +177,7 @@ def create_figure(
     # with the Nyquist frequency overlayed:
     #####
     ax = plt.subplot(1, 3, 3)
-    plt.title("Frequency performance")
+    plt.title("(c) Frequency performance")
     # Excitation and STED OTFs:
     def freqs(x, dc_term):
         otf = np.fft.fftshift(np.abs(np.fft.fft(x)))
@@ -207,7 +210,7 @@ def create_figure(
                label="Nyquist limit")
     plt.xlim(fine_excitation_frac.shape[1]*0.25,
              fine_excitation_frac.shape[1]*0.75)
-    plt.ylim(1e-2, 1e4)
+    plt.ylim(1e-2, 9e3)
     ax.set_xlabel('Spatial frequency')
     ax.set_ylabel('Transmission amplitude')
     ax.axes.get_xaxis().set_ticks([])
@@ -228,9 +231,9 @@ def create_figure(
         '%03ipulses'%pulses_per_position +
         '.svg')
     print("Saving:", filename, '\n')
-    if not os.path.exists('Figure_0_output'):
-        os.mkdir('Figure_0_output')
-    plt.savefig(os.path.join('Figure_0_output', filename),
+    if not os.path.exists('Figure_1_output'):
+        os.mkdir('Figure_1_output')
+    plt.savefig(os.path.join('Figure_1_output', filename),
                 bbox_inches='tight')
     plt.close(fig)
 
