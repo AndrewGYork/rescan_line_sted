@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 from line_sted_tools import psf_report
 
 def main():
-    illumination_shapes = ['line', 'point']
+    psf_types = ['line', 'point']
     excitation_brightnesses = [0.25, 1, 4]
     depletion_brightnesses = [0, 1,  3, 9, 27]
     sampling_rates = [4, 6, 8, 12]
@@ -13,16 +13,16 @@ def main():
         for dep in depletion_brightnesses:
             for samps in sampling_rates:
                 for pulses in pulses_per_position:
-                    for ill in illumination_shapes:
+                    for p in psf_types:
                         create_figure(
-                            illumination_shape=ill,
+                            psf_type=p,
                             excitation_brightness=exc,
                             depletion_brightness=dep,
                             steps_per_excitation_psf_width=samps,
                             pulses_per_position=pulses)
 
 def create_figure(
-    illumination_shape='point', # Point or line
+    psf_type='point', # Point or line
     excitation_brightness=0.2, # Peak brightness in saturation units
     depletion_brightness=20, # Peak brightness in saturation units
     steps_per_excitation_psf_width=12, # Small? Bad res. Big? Bad dose.
@@ -30,7 +30,7 @@ def create_figure(
     ):
     args = locals()
     args['verbose'] = True
-    args['save'] = False
+    args['output_dir'] = None
     ###################
     # Calculations
     ###################
@@ -53,9 +53,9 @@ def create_figure(
     # Calculate the pixel positions of the samples:
     step_size_ratio = (fine_args['steps_per_excitation_psf_width'] /
                        args['steps_per_excitation_psf_width'])
-    if illumination_shape == 'point':
+    if psf_type == 'point':
         y_vals = np.arange(0, fine_excitation.shape[1], step_size_ratio)
-    elif illumination_shape == 'line':
+    elif psf_type == 'line':
         y_vals = [fine_excitation.shape[1] // 2]
     sample_points_x, sample_points_y = [], []
     for x in np.arange(0, fine_excitation.shape[0], step_size_ratio):
@@ -73,16 +73,12 @@ def create_figure(
         " Depletion dose:%8s"%(
             '%0.2f'%report['depletion_dose']),
         fontweight=800, multialignment='left', family='monospace')
-    if illumination_shape == 'point':
-        res_improvement = report['resolution_improvement']
-    elif illumination_shape == 'line':
-        res_improvement = report['resolution_improvement_no_rescan']
     fig.text(x=0.41, y=0.02, s="(e)", fontsize=15)
     fig.text(x=0.43, y=-0.01, s='' +
         " Emissions:%5s per molecule\n"%(
             '%0.2f'%report['expected_emission']) +
         "Resolution:%5sx diffraction"%(
-            '%0.1f'%res_improvement),
+            '%0.1f'%report['resolution_improvement_descanned']),
         fontweight=800, multialignment='left', family='monospace')
     #####
     # Plot a 1D lineout of the excitation and depletion illumination,
@@ -184,12 +180,12 @@ def create_figure(
         otf /= otf.max()
         otf *= dc_term
         return otf
-    if illumination_shape == 'point':
+    if psf_type == 'point':
         exc_dc_term = (report['psfs']['excitation_fraction'].sum() *
                        report['pulses_per_position'])
         sted_dc_term = (report['psfs']['sted'].sum() *
                         report['pulses_per_position'])
-    elif illumination_shape == 'line':
+    elif psf_type == 'line':
         midline = report['psfs']['excitation'].shape[1] // 2
         exc_dc_term = (report['pulses_per_position'] *
                        report['psfs']['excitation_fraction'][0, midline, :].sum())
@@ -224,7 +220,7 @@ def create_figure(
     # Save the figure
     ###################
     filename = (
-        illumination_shape + '_' +
+        psf_type + '_' +
         ('%0.2fexc'%(excitation_brightness)).replace('.', 'p') + '_' +
         ('%0.2fdep'%(depletion_brightness)).replace('.', 'p') + '_' +
         '%03isamps'%steps_per_excitation_psf_width + '_' +
