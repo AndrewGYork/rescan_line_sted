@@ -17,29 +17,32 @@ line scan directions gives higher image quality than point-STED.
 def main():
     output_prefix = os.path.join(os.getcwd(), 'Figure_2_output/')
     psfs, comparisons = calculate_psfs(output_prefix) # Lots going on; see below.
-    if deconvolution_is_complete(psfs, output_prefix):
-        print("Using saved deconvolution results.")
-    else:
-        # Create a deconvolution object for each of the psfs created above
-        deconvolvers = {name: st.Deconvolver(psf, (output_prefix + name + '_'))
-                        for name, psf in psfs.items()}
-        # Use our test object to create simulated data for each imaging
-        # method and dump the data to disk:
-        test_object = np_tif.tif_to_array(
-            'test_object_cat.tif').astype(np.float64)
-        for decon_object in deconvolvers.values():
-            decon_object.create_data_from_object(
-                test_object, total_brightness=5e10)
-            decon_object.record_data()
-        # Deconvolve each of our objects, saving occasionally:
-        input("\nHit enter to begin deconvolution.")
-        print('Deconvolving...')
-        for i, save in st.logarithmic_progress(range(2**10 + 1)):
+    for im_name in ('cat', 'astronaut', 'lines', 'rings'):
+        print("\nTest image:", im_name)
+        if deconvolution_is_complete(psfs, output_prefix, im_name):
+            print("Using saved deconvolution results.")
+        else:
+            # Create a deconvolution object for each of the psfs created above
+            deconvolvers = {
+                name: st.Deconvolver(
+                    psf, (output_prefix + im_name + '_' + name + '_'))
+                for name, psf in psfs.items()}
+            # Use our test object to create simulated data for each imaging
+            # method and dump the data to disk:
+            test_object = np_tif.tif_to_array(
+                'test_object_'+ im_name +'.tif').astype(np.float64)
             for decon_object in deconvolvers.values():
-                decon_object.iterate()
-                if save: decon_object.record_iteration()
-        print('\nDone deconvolving.')
-    create_figure(comparisons, output_prefix)
+                decon_object.create_data_from_object(
+                    test_object, total_brightness=5e10)
+                decon_object.record_data()
+            # Deconvolve each of our objects, saving occasionally:
+            print('Deconvolving...')
+            for i, save in st.logarithmic_progress(range(2**10 + 1)):
+                for decon_object in deconvolvers.values():
+                    decon_object.iterate()
+                    if save: decon_object.record_iteration()
+            print('\nDone deconvolving.')
+        create_figure(comparisons, output_prefix, im_name)
 
 def calculate_psfs(output_prefix):
     """
@@ -181,12 +184,14 @@ def psf_comparison_pair(
             'point': point,
             'line': line}
 
-def deconvolution_is_complete(psfs, output_prefix):
+def deconvolution_is_complete(psfs, output_prefix, im_name):
     """Check for saved deconvolution results
     """
-    estimate_filenames = [output_prefix + name + '_estimate_history.tif'
+    estimate_filenames = [output_prefix + im_name +'_'+ name +
+                          '_estimate_history.tif'
                           for name in sorted(psfs.keys())]
-    ft_error_filenames = [output_prefix + name + '_estimate_FT_error_history.tif'
+    ft_error_filenames = [output_prefix + im_name + '_'+ name +
+                          '_estimate_FT_error_history.tif'
                           for name in sorted(psfs.keys())]
     for f in estimate_filenames + ft_error_filenames:
         if not os.path.exists(f):
@@ -203,24 +208,26 @@ def rotate(x, degrees):
             interpolation.rotate(x, angle=degrees, axes=(1, 2), reshape=False),
             0, 1.1 * x.max())
 
-def create_figure(comparisons, output_prefix):
+def create_figure(comparisons, output_prefix, im_name):
     print("Constructing figure images...")
-    figure_dir = os.path.join(output_prefix, "Figures")
+    figure_dir = os.path.join(output_prefix, "1_Figures")
     if not os.path.exists(figure_dir): os.mkdir(figure_dir)
     for c in sorted(comparisons.keys()):
         # Calculating the filenames and loading the images isn't too
         # hard but the code looks like a bucket full of crabs:
         num_angles = len(comparisons[c]['line_sted_psfs'])
         point_estimate_filename = (
-            output_prefix + c + '_point_sted_estimate_history.tif')
+            output_prefix + im_name +'_'+ c +
+            '_point_sted_estimate_history.tif')
         point_estimate = np_tif.tif_to_array(
             point_estimate_filename)[-1, :, :].astype(np.float64)
         line_estimate_filename = (
-            output_prefix + c + '_line_%i'%num_angles +
-            '_angles_sted_estimate_history.tif')
+            output_prefix + im_name +'_'+ c +
+            '_line_%i_angles_sted_estimate_history.tif'%num_angles)
         line_estimate = np_tif.tif_to_array(
             line_estimate_filename)[-1, :, :].astype(np.float64)
-        true_object_filename = output_prefix + c + '_point_sted_object.tif'
+        true_object_filename = (
+            output_prefix + im_name + '_' + c + '_point_sted_object.tif')
         true_object = np_tif.tif_to_array(
             true_object_filename)[0, :, :].astype(np.float64)
         # Not that my "publication-quality" matplotlib figure-generating
@@ -236,41 +243,43 @@ def create_figure(comparisons, output_prefix):
             ax.axes.get_xaxis().set_ticks([])
             ax.axes.get_yaxis().set_ticks([])
             if c == '1p0x':
-                ax.set_xlabel("Point confocal")
+                ax.set_xlabel("(a) Point confocal")
             else:
-                ax.set_xlabel("Point STED")
+                ax.set_xlabel("(a) Point STED")
             ax = plt.subplot(1, 3, 2)
             plt.imshow(line_estimate, cmap=plt.cm.gray)
             ax.axes.get_xaxis().set_ticks([])
             ax.axes.get_yaxis().set_ticks([])
             if c == '1p0x':
-                ax.set_xlabel("%i-line confocal"%num_angles)
+                ax.set_xlabel("(b) %i-line confocal"%num_angles)
             else:
-                ax.set_xlabel("%i-line STED"%num_angles)
+                ax.set_xlabel("(b) %i-line STED"%num_angles)
             ax = plt.subplot(1, 3, 3)
             plt.imshow((point_estimate, line_estimate)[i], cmap=plt.cm.gray)
             ax.axes.get_xaxis().set_ticks([])
             ax.axes.get_yaxis().set_ticks([])
             if c == '1p0x':
-                ax.set_xlabel(("Point confocal",
-                               "%i-line confocal"%num_angles)[i])
+                ax.set_xlabel(("(c) Point confocal",
+                               "(c) %i-line confocal"%num_angles)[i])
             else:
-                ax.set_xlabel(("Point STED", "%i-line STED"%num_angles)[i])
+                ax.set_xlabel(("(c) Point STED",
+                               "(c) %i-line STED"%num_angles)[i])
             plt.subplots_adjust(left=0, bottom=0, right=1, top=1,
                                 wspace=0, hspace=0)
             plt.savefig(os.path.join(
-                output_prefix, 'figure_2_' + c + '_%i.svg'%i),
+                output_prefix, 'figure_2_'+ im_name +'_'+ c + '_%i.svg'%i),
                         bbox_inches='tight')
             plt.close(fig)
         imagemagick_failure = False
         try: # Try to convert the SVG output to animated GIF
             call(["convert",
                   "-loop", "0",
-                  "-delay", "100", os.path.join(output_prefix,
-                                                'figure_2_' + c + '_0.svg'),
-                  "-delay", "100", os.path.join(output_prefix,
-                                                'figure_2_' + c + '_1.svg'),
-                  os.path.join(figure_dir, 'figure_2_' + c + '.gif')])
+                  "-delay", "100", os.path.join(
+                      output_prefix, 'figure_2_'+ im_name +'_'+ c + '_0.svg'),
+                  "-delay", "100", os.path.join(
+                      output_prefix, 'figure_2_'+ im_name +'_'+ c + '_1.svg'),
+                  os.path.join(
+                      figure_dir, 'figure_2_' + im_name + '_' + c + '.gif')])
         except: # Don't expect this conversion to work on anyone else's system.
             if not imagemagick_failure:
                 print("Gif conversion failed. Is ImageMagick installed?")
@@ -298,7 +307,7 @@ def create_figure(comparisons, output_prefix):
         x0_2, x1_2 = (0.5 + rad * np.array((-np.cos(ang), np.cos(ang)))) * n_x
         y0_2, y1_2 = (0.5 + rad * np.array((-np.sin(ang), np.sin(ang)))) * n_y
         ax.plot([x0_2 + n_x, x1_2 + n_x], [y0_2, y1_2], 'b+:')
-        ax.set_xlabel("Error vs. spatial frequency")
+        ax.set_xlabel("(d) Error vs. spatial frequency")
         # Error vs. spatial frequency for lines extracted from the
         # 2D fourier error plots
         ax = plt.subplot2grid((12, 12), (2, 8), rowspan=6, colspan=4)
@@ -317,7 +326,7 @@ def create_figure(comparisons, output_prefix):
         ax.semilogy(gaussian_filter(z_line_2, sigma=samps/80),
                     'b:', label='Line, worst')
         ax.axes.get_xaxis().set_ticks([])
-        ax.set_xlabel("Error vs. spatial frequency")
+        ax.set_xlabel("(e) Error vs. spatial frequency")
         plt.ylim(5e0, 9e5)
         ax.yaxis.tick_right()
         ax.grid('on')
@@ -333,8 +342,8 @@ def create_figure(comparisons, output_prefix):
             plt.imshow(im[0, :, :], cmap=plt.cm.gray)
             ax.axes.get_xaxis().set_ticks([])
             ax.axes.get_yaxis().set_ticks([])
-        fig.text(x=0.16, y=0.25, s="Point PSF", fontsize=10)
-        fig.text(x=0.26, y=0.25, s="Line PSF(s)", fontsize=10)
+        fig.text(x=0.16, y=0.25, s="(f) Point PSF", fontsize=10)
+        fig.text(x=0.26, y=0.25, s="(g) Line PSF(s)", fontsize=10)
         # Save the results
         fig.text(x=0.65, y=0.83,
                  s=("Excitation dose: %6s\n"%(
@@ -344,7 +353,8 @@ def create_figure(comparisons, output_prefix):
                  fontsize=12, fontweight='bold')
         plt.subplots_adjust(left=None, bottom=None, right=None, top=None,
                             wspace=0, hspace=0)
-        plt.savefig(os.path.join(figure_dir, 'figure_2_' + c + '.svg'),
+        plt.savefig(os.path.join(
+            figure_dir, 'figure_2_'+ im_name +'_'+ c + '.svg'),
                     bbox_inches='tight')
         plt.close(fig)
     print("Done constructing figure images.")
