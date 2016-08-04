@@ -34,9 +34,7 @@ def create_figure(
     ###################
     # Calculations
     ###################
-    # These parameters define a STED measurement:
-    # Using these parameters, calculate the relevant PSFs and light
-    # dosages:
+    # Calculate the relevant PSFs and light dosages:
     print("Generating figure with parameters:")
     report = psf_report(**args)
     # Also calculate the same PSFs on a much finer grid, so we can show
