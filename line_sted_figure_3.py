@@ -5,9 +5,6 @@ import matplotlib.pyplot as plt
 from scipy.ndimage import gaussian_filter, interpolation
 import np_tif
 
-#TODO: Nondescan multipoint doesn't seem to be assigning pixels to the
-#exact right place
-
 """
 Illustrate descanned line-STED vs. rescanned line-STED data acquisition
 process, to show how rescanning greatly improves imaging speed by
@@ -25,21 +22,28 @@ def main():
         for fov_size in (1, 2,):
             obj = np.tile(obj, (1, fov_size, fov_size))
             print("\nTest object:", im_name, obj.shape, obj.dtype)
-            for R, num_orientations in ((1, 2), (2, 4)):
-                for imaging_type in ('descan_point',
-                                     'nondescan_multipoint',
-                                     'descan_line',
-                                     'rescan_line',):
-                    comparison_name = ('%s_%ix%iFOV_%0.2fxR'%(
-                        im_name, fov_size, fov_size, R)).replace('.', 'p')
+            for R in (1, 2, 3): 
+                comparison_name = ('%s_%ix%iFOV_%0.2fxR'%(
+                    im_name, fov_size, fov_size, R)).replace('.', 'p')
+                for imaging_type in ('descan_point', 'nondescan_multipoint'):
                     simulate_imaging(obj,
                                      imaging_type,
                                      psf_width,
                                      R,
-                                     num_orientations,
+                                     num_orientations=1,
                                      pulses_per_position=1,
-                                     pad=int(0.5*max(obj.shape)),
+                                     pad=psf_width,
                                      comparison_name=comparison_name)
+                for imaging_type in ('descan_line', 'rescan_line'):
+                    for num_orientations in (2, 4, 6):
+                        simulate_imaging(obj,
+                                         imaging_type,
+                                         psf_width,
+                                         R,
+                                         num_orientations,
+                                         pulses_per_position=1,
+                                         pad=int(0.45*max(obj.shape)),
+                                         comparison_name=comparison_name)
 
 def simulate_imaging(
     obj,
@@ -141,20 +145,16 @@ def simulate_imaging(
                     cum_detector_sig = inst_detector_sig
                     # A region of the detector centered on each excitation
                     # point contributes to a single reconstruction pixel:
-                    for j in range(int(obj.shape[-2]/exc_sep)): 
-                        for i in range(int(obj.shape[-1]/exc_sep)):
+                    for y_sp in range(pad+shift_y, pad+shift_y+n_y, exc_sep):
+                        for x_sp in range(pad+shift_x, pad+shift_x+n_x, exc_sep):
                             signal_region = inst_detector_sig[
                                 0,
-                                max(shift_y+j*exc_sep-exc_sep//3, 0)
-                                   :shift_y+j*exc_sep+exc_sep//3,
-                                max(shift_x+i*exc_sep-exc_sep//3, 0)
-                                   :shift_x+i*exc_sep+exc_sep//3]
+                                max(y_sp-exc_sep//3, 0):y_sp+exc_sep//3,
+                                max(x_sp-exc_sep//3, 0):x_sp+exc_sep//3]
                             reconstruction[ #Target pixel
                                 0,
-                                shift_y+j*exc_sep:
-                                shift_y+j*exc_sep+step,
-                                shift_x+i*exc_sep:
-                                shift_x+i*exc_sep+step
+                                y_sp-step//2:y_sp-step//2+step,
+                                x_sp-step//2:x_sp-step//2+step
                                 ] = signal_region.sum()
                     camera_exposures += 1
                 elif imaging_type == 'rescan_line':
@@ -329,428 +329,3 @@ def scale_y(x, scaling_factor):
     return padded_x.reshape(original_shape)
 
 main()
-
-
-##def main():
-##    if not os.path.exists('Figure_3_output'): os.mkdir('Figure_3_output')
-##    if not os.path.exists('Figure_3_output/1_Figures'):
-##        os.mkdir('Figure_3_output/1_Figures')
-##
-##    psf_width = 25 # Same as Figure 2, in object pixels
-##    comparisons = {}
-##    comparisons['1p0x'] = psf_comparison_pair(
-##        point_resolution_improvement=0.97,
-##        line_resolution_improvement=0.97,
-##        point_emissions_per_molecule=3,
-##        line_emissions_per_molecule=3,
-##        line_scan_type='descanned',
-##        line_num_orientations=4,
-##        steps_per_excitation_psf_width=psf_width)
-####    comparisons['2p0x'] = psf_comparison_pair(
-####        point_resolution_improvement=2.,
-####        line_resolution_improvement=2.,
-####        point_emissions_per_molecule=4,
-####        line_emissions_per_molecule=4,
-####        line_scan_type='descanned',
-####        line_num_orientations=4,
-####        steps_per_excitation_psf_width=psf_width)
-##    
-##    fig = plt.figure(figsize=(10, 4), dpi=100)
-##    for im_name in ('rings',):# 'lines'):
-##        obj = np_tif.tif_to_array('test_object_'+ im_name +'.tif') / 255 + 1e-5
-##        for fov_size in (1,):# 2,):
-##            obj = np.tile(obj, (1, fov_size, fov_size))
-##            print("\nTest object:", im_name, obj.shape, obj.dtype)
-##            for which_comp in ('1p0x',):
-####                descanned_single_point_figure(
-####                    obj, psf_width, comparisons, which_comp, im_name, fov_size)
-####                nondescanned_multi_point_figure(
-####                    obj, psf_width, comparisons, which_comp, im_name, fov_size)
-####                descanned_line_figure(
-####                    obj, psf_width, comparisons, which_comp, im_name, fov_size)
-##                rescanned_line_figure(
-##                    obj, psf_width, comparisons, which_comp, im_name, fov_size)
-
-
-##def descanned_single_point_figure(
-##    obj, psf_width, comparisons, which_comp, im_name, fov_size):
-##    print("\nGenerating animation for descanned point-STED")
-##    print('Using parameters from comparison:', which_comp)
-##    psf_sigma = psf_width / (2*np.sqrt(2*np.log(2)))
-##    c = comparisons[which_comp]
-##    point_R = c['point']['resolution_improvement_descanned']
-##    point_step =  int(psf_width / c['point']['steps_per_excitation_psf_width'])
-##    point_pulses = c['point']['pulses_per_position']
-##    print("Point: R: %0.2f, Step size: %0.2f, Pulses/position: %i"%(
-##        point_R, point_step, point_pulses))
-##    centered_excitation = np.zeros(obj.shape)
-##    centered_excitation[0, obj.shape[1]//2, obj.shape[2]//2] = 1
-##    centered_excitation = gaussian_filter(
-##        centered_excitation, sigma=psf_sigma/point_R, truncate=6)
-##    centered_excitation /= centered_excitation.max()
-##    reconstruction, contribution = np.zeros(obj.shape), np.zeros(obj.shape)
-##    which_im, pulses_delivered = -1, 0
-##    descan_point_filenames = []
-##    print("Scanning row: ", end='')
-##    for y in np.arange(-obj.shape[1]//2, obj.shape[1]//2+1, point_step):
-##        print(int(y), ', ', sep='', end='')
-##        y_scanned_excitation = np.roll(centered_excitation, int(y), axis=1)
-##        for x in np.arange(-obj.shape[2]//2, obj.shape[2]//2+1, point_step):
-##            excitation = np.roll(y_scanned_excitation, int(x), axis=2)
-##            instantaneous_detector_signal = gaussian_filter(
-##                np.roll(np.roll(obj * excitation,
-##                                -int(y), axis=1), -int(x), axis=2),
-##                sigma=psf_sigma)
-##            cumulative_detector_signal = instantaneous_detector_signal
-##            reconstruction[0,
-##                           y+obj.shape[1]//2:y+obj.shape[1]//2+point_step,
-##                           x+obj.shape[2]//2:x+obj.shape[2]//2+point_step
-##                           ] += instantaneous_detector_signal.sum()
-##            contribution.fill(0)
-##            contribution[0,
-##                         y+obj.shape[1]//2:y+obj.shape[1]//2+point_step,
-##                         x+obj.shape[2]//2:x+obj.shape[2]//2+point_step
-##                         ] = 1
-##            pulses_delivered += point_pulses
-##            which_im += 1
-##            if which_im % 5 == 0:
-##                descan_point_filenames.append(os.path.join(
-##                    os.getcwd(), 'Figure_3_output', 'descan_point_' +
-##                    which_comp + '_%ix%i_'%(fov_size, fov_size) +
-##                    im_name + '_%06i.svg'%which_im))
-##                generate_figure(
-##                    descan_point_filenames[-1], obj, excitation,
-##                    instantaneous_detector_signal, cumulative_detector_signal,
-##                    contribution, reconstruction,
-##                    pulses_delivered, camera_exposures='N/A')
-##    descan_point_filenames.append(os.path.join(
-##        os.getcwd(), 'Figure_3_output', 'descan_point_' +
-##        which_comp + '_%ix%i_'%(fov_size, fov_size) +
-##        im_name + '_%06i.svg'%which_im))
-##    generate_figure(
-##        descan_point_filenames[-1], obj, excitation,
-##        instantaneous_detector_signal, cumulative_detector_signal,
-##        contribution, reconstruction,
-##        pulses_delivered, camera_exposures='N/A')
-##    animate(input_filenames=descan_point_filenames,
-##            output_filename=('descan_point_' + which_comp + '_' + im_name +
-##                             '_%ix%i'%(fov_size, fov_size)))
-##
-##def nondescanned_multi_point_figure(
-##    obj, psf_width, comparisons, which_comp, im_name, fov_size):
-##    print("\nGenerating animation for nondescanned multipoint-STED")
-##    print('Using parameters from comparison:', which_comp)
-##    psf_sigma = psf_width / (2*np.sqrt(2*np.log(2)))
-##    c = comparisons[which_comp]
-##    point_R = c['point']['resolution_improvement_descanned']
-##    point_step =  int(psf_width / c['point']['steps_per_excitation_psf_width'])
-##    point_pulses = c['point']['pulses_per_position']
-##    print("Point: R: %0.2f, Step size: %0.2f, Pulses/position: %i"%(
-##        point_R, point_step, point_pulses))
-##    sep = 32
-##    excitation = np.zeros((1, obj.shape[1]+2*sep, obj.shape[2]+2*sep))
-##    excitation[0,  ::sep, ::sep] = 1
-##    excitation = gaussian_filter(excitation, sigma=psf_sigma/point_R, truncate=6)
-##    excitation /= excitation[:, sep:-sep, sep:-sep].max()
-##    reconstruction, contribution = np.zeros(obj.shape), np.zeros(obj.shape)
-##    which_im, pulses_delivered, camera_exposures = -1, 0, 0
-##    nondescan_multipoint_filenames = []
-##    print("Scanning row: ", end='')
-##    for y in np.arange(0, sep, point_step):
-##        print(int(y), ", ", sep='', end='')
-##        y_scanned_excitation = np.roll(excitation, int(y), axis=1)
-##        for x in np.arange(0, sep, point_step):
-##            xy_scanned_excitation = np.roll(y_scanned_excitation, int(x), axis=2
-##                                            )[:, sep:-sep, sep:-sep]
-##            instantaneous_detector_signal = gaussian_filter(
-##                obj * xy_scanned_excitation,
-##                sigma=(0, psf_sigma, psf_sigma),
-##                mode='constant')
-##            cumulative_detector_signal = instantaneous_detector_signal
-##            contribution.fill(0)
-##            for j in range(int(reconstruction.shape[1]/sep)):
-##                for i in range(int(reconstruction.shape[2]/sep)):
-##                    reconstruction[
-##                        0,
-##                        y+j*sep:y+j*sep+point_step,
-##                        x+i*sep:x+i*sep+point_step
-##                        ] = instantaneous_detector_signal[
-##                            0,
-##                            max(y-sep//3+j*sep, 0):y+sep//3+j*sep,
-##                            max(x-sep//3+i*sep, 0):x+sep//3+i*sep].sum()
-##                    contribution[
-##                        0,
-##                        y+j*sep:y+j*sep+point_step,
-##                        x+i*sep:x+i*sep+point_step] = 1
-##            pulses_delivered += point_pulses
-##            camera_exposures += 1
-##            which_im += 1
-##            if which_im % 2 == 0:
-##                nondescan_multipoint_filenames.append(os.path.join(
-##                    os.getcwd(), 'Figure_3_output', 'nondescan_multipoint_' +
-##                    which_comp + '_%ix%i_'%(fov_size, fov_size) +
-##                    im_name +'_%06i.svg'%which_im))
-##                generate_figure(
-##                    nondescan_multipoint_filenames[-1], obj,
-##                    xy_scanned_excitation,
-##                    instantaneous_detector_signal, cumulative_detector_signal,
-##                    contribution, reconstruction,
-##                    pulses_delivered, camera_exposures='%03i'%camera_exposures)
-##    nondescan_multipoint_filenames.append(os.path.join(
-##        os.getcwd(), 'Figure_3_output', 'nondescan_multipoint_' +
-##        which_comp + '_%ix%i_'%(fov_size, fov_size) +
-##        im_name +'_%06i.svg'%which_im))
-##    generate_figure(
-##        nondescan_multipoint_filenames[-1], obj,
-##        xy_scanned_excitation,
-##        instantaneous_detector_signal, cumulative_detector_signal,
-##        contribution, reconstruction,
-##        pulses_delivered, camera_exposures='%03i'%camera_exposures)
-##    print()
-##    animate(input_filenames=nondescan_multipoint_filenames,
-##            output_filename=('nondescan_multipoint_' + which_comp + '_' +
-##                             im_name + '_%ix%i'%(fov_size, fov_size)))
-##
-##def descanned_line_figure(
-##    obj, psf_width, comparisons, which_comp, im_name, fov_size):
-##    print("\nGenerating animation for descanned line-STED")
-##    print('Using parameters from comparison:', which_comp)
-##    psf_sigma = psf_width / (2*np.sqrt(2*np.log(2)))
-##    c = comparisons[which_comp]
-##    line_R = c['line']['resolution_improvement_descanned']
-##    line_step = int(psf_width / c['line']['steps_per_excitation_psf_width'])
-##    line_pulses = c['line']['pulses_per_position']
-##    line_angles = len(c['line_sted_psfs'])
-##    print("Line:  R: %0.2f, Step size: %0.2f, Pulses/position: %i, Angles: %i"%(
-##        line_R, line_step, line_pulses, line_angles))
-##    descan_line_filenames = []
-##    pulses_delivered, camera_exposures = 0, 0
-##    for rotation_deg in np.arange(0, 180, 180/line_angles)[::-1]:
-##        print("Angle:", rotation_deg)
-##        rot_obj = np.clip(interpolation.rotate(
-##            obj, angle=rotation_deg, axes=(1, 2), mode='nearest'),
-##                          0, 1.1*obj.max())
-##        y_i, x_i = ((rot_obj.shape[1]-obj.shape[1])//2,
-##                    (rot_obj.shape[2]-obj.shape[2])//2)
-##        y_f, x_f = obj.shape[1] + y_i, obj.shape[2] + x_i
-##        centered_excitation = np.zeros(rot_obj.shape)
-##        centered_excitation[0, rot_obj.shape[1]//2, :] = 1
-##        centered_excitation = gaussian_filter(
-##            centered_excitation, sigma=(0, psf_sigma/line_R, 0), truncate=6)
-##        centered_excitation /= centered_excitation.max()
-##        reconstruction, contribution = np.zeros(obj.shape), np.zeros(obj.shape)
-##        which_im = -1
-##        print("Scanning row: ", end='')
-##        for y in np.arange(-obj.shape[1]//2, obj.shape[1]//2+1, line_step):
-##            print(int(y), ', ', sep='', end='')
-##            excitation = np.roll(centered_excitation, int(y), axis=1)
-##            instantaneous_detector_signal = gaussian_filter(np.roll(
-##                rot_obj * excitation, -int(y), axis=1), sigma=psf_sigma)[
-##                    :, y_i:y_f, x_i:x_f]
-##            cumulative_detector_signal = instantaneous_detector_signal
-##            reconstruction[
-##                0:, y+obj.shape[1]//2:y+obj.shape[1]//2+line_step, :
-##                ] += instantaneous_detector_signal.sum(axis=1, keepdims=True)
-##            contribution.fill(0)
-##            contribution[0, y+obj.shape[1]//2:y+obj.shape[1]//2+line_step, :] = 1
-##            # Rotate back for display
-##            excitation = np.clip(interpolation.rotate(
-##                excitation, angle=-rotation_deg, axes=(1, 2), reshape=False
-##                ), 0, 1.1*excitation.max())[:, y_i:y_f, x_i:x_f]
-##            unrot_reconstruction = np.clip(interpolation.rotate(
-##                reconstruction, angle=-rotation_deg, axes=(1, 2), reshape=False
-##                ), 0, 1.1*reconstruction.max())
-##            unrot_contribution = np.clip(interpolation.rotate(
-##                contribution, angle=-rotation_deg, axes=(1, 2), reshape=False
-##                ), 0, 1.1*contribution.max())
-##            pulses_delivered += line_pulses / line_angles
-##            camera_exposures += 1
-##            which_im += 1
-##            if which_im % 2 == 0:
-##                descan_line_filenames.append(os.path.join(
-##                    os.getcwd(), 'Figure_3_output',
-##                    'descan_line_%03ideg_'%rotation_deg + which_comp +
-##                    '_' + im_name + '_%06i.svg'%which_im))
-##                generate_figure(
-##                    descan_line_filenames[-1], obj, excitation,
-##                    instantaneous_detector_signal, cumulative_detector_signal,
-##                    unrot_contribution, unrot_reconstruction,
-##                    pulses_delivered, camera_exposures='%i'%camera_exposures)
-##        descan_line_filenames.append(os.path.join(
-##            os.getcwd(), 'Figure_3_output',
-##            'descan_line_%03ideg_'%rotation_deg + which_comp +
-##            '_' + im_name + '_%06i.svg'%which_im))
-##        generate_figure(
-##            descan_line_filenames[-1], obj, excitation,
-##            instantaneous_detector_signal, cumulative_detector_signal,
-##            unrot_contribution, unrot_reconstruction,
-##            pulses_delivered, camera_exposures='%i'%camera_exposures)
-##        print()
-##    animate(input_filenames=descan_line_filenames,
-##            output_filename=('descan_line_' + which_comp + '_' + im_name +
-##                             '_%ix%i'%(fov_size, fov_size)))
-##
-##def rescanned_line_figure(
-##    obj, psf_width, comparisons, which_comp, im_name, fov_size):
-##    print("\nGenerating animation for rescanned line-STED")
-##    print('Using parameters from comparison:', which_comp)
-##    psf_sigma = psf_width / (2*np.sqrt(2*np.log(2)))
-##    c = comparisons[which_comp]
-##    line_R = c['line']['resolution_improvement_descanned']
-##    line_step = int(psf_width / c['line']['steps_per_excitation_psf_width'])
-##    line_pulses = c['line']['pulses_per_position']
-##    line_angles = len(c['line_sted_psfs'])
-##    rescan_ratio = line_R**2 + 1
-##    print("Line:  R: %0.2f, Step size: %0.2f, Pulses/position: %i, Angles: %i"%(
-##        line_R, line_step, line_pulses, line_angles))
-##    rescan_line_filenames = []
-##    pulses_delivered, camera_exposures = 0, -1
-##    for rotation_deg in np.arange(0, 180, 180/line_angles)[::-1]:
-##        camera_exposures += 1
-##        print("Angle:", rotation_deg)
-##        rot_obj = np.clip(interpolation.rotate(
-##            obj, angle=rotation_deg, axes=(1, 2), mode='nearest'),
-##                          0, 1.1*obj.max())
-##        y_i, x_i = ((rot_obj.shape[1]-obj.shape[1])//2,
-##                    (rot_obj.shape[2]-obj.shape[2])//2)
-##        y_f, x_f = obj.shape[1] + y_i, obj.shape[2] + x_i
-##        centered_excitation = np.zeros(rot_obj.shape)
-##        centered_excitation[0, rot_obj.shape[1]//2, :] = 1
-##        centered_excitation = gaussian_filter(
-##            centered_excitation, sigma=(0, psf_sigma/line_R, 0), truncate=6)
-##        centered_excitation /= centered_excitation.max()
-##        reconstruction, contribution = np.zeros(obj.shape), np.zeros(obj.shape)
-##        cumulative_detector_signal = np.zeros(obj.shape)
-##        which_im = -1
-##        print("Scanning row: ", end='')
-##        for y in np.arange(-obj.shape[1]//2, obj.shape[1]//2+1, line_step):
-##            print(int(y), ', ', sep='', end='')
-##            excitation = np.roll(centered_excitation, int(y), axis=1)
-##            descanned_signal = gaussian_filter(np.roll(
-##                rot_obj * excitation, -int(y), axis=1), sigma=psf_sigma)[
-##                    :, y_i:y_f, x_i:x_f]
-##            scaled_descanned_signal = interpolation.zoom(
-##                descanned_signal, zoom=(1, 1/rescan_ratio, 1))
-##            pad = descanned_signal.shape[1] - scaled_descanned_signal.shape[1]
-##            scaled_descanned_signal = np.pad(
-##                scaled_descanned_signal,
-##                ((0, 0), (pad//2, pad-pad//2), (0, 0)), 'constant')
-##            instantaneous_detector_signal = np.roll(
-##                scaled_descanned_signal, int(y), axis=1)
-##            cumulative_detector_signal += instantaneous_detector_signal
-####            reconstruction[
-####                0:, y+obj.shape[1]//2:y+obj.shape[1]//2+line_step, :
-####                ] += instantaneous_detector_signal.sum(axis=1, keepdims=True)
-####            contribution.fill(0)
-####            contribution[0, y+obj.shape[1]//2:y+obj.shape[1]//2+line_step, :] = 1
-##            # Rotate back for display
-##            excitation = np.clip(interpolation.rotate(
-##                excitation, angle=-rotation_deg, axes=(1, 2), reshape=False
-##                ), 0, 1.1*excitation.max())[:, y_i:y_f, x_i:x_f]
-##            unrot_reconstruction = np.clip(interpolation.rotate(
-##                reconstruction, angle=-rotation_deg, axes=(1, 2), reshape=False
-##                ), 0, 1.1*reconstruction.max())
-##            unrot_contribution = np.clip(interpolation.rotate(
-##                contribution, angle=-rotation_deg, axes=(1, 2), reshape=False
-##                ), 0, 1.1*contribution.max())
-##            pulses_delivered += line_pulses / line_angles
-##            which_im += 1
-##            if which_im % 2 == 0:
-##                rescan_line_filenames.append(os.path.join(
-##                    os.getcwd(), 'Figure_3_output',
-##                    'rescan_line_%03ideg_'%rotation_deg + which_comp +
-##                    '_' + im_name + '_%06i.svg'%which_im))
-##                generate_figure(
-##                    rescan_line_filenames[-1], obj, excitation,
-##                    instantaneous_detector_signal, cumulative_detector_signal,
-##                    unrot_contribution, unrot_reconstruction,
-##                    pulses_delivered, camera_exposures='%i'%camera_exposures)
-##        reconstruction = cumulative_detector_signal
-##        contribution.fill(1)
-##        rescan_line_filenames.append(os.path.join(
-##            os.getcwd(), 'Figure_3_output',
-##            'rescan_line_%03ideg_'%rotation_deg + which_comp +
-##            '_' + im_name + '_%06i.svg'%which_im))
-##        generate_figure(
-##            rescan_line_filenames[-1], obj, excitation,
-##            instantaneous_detector_signal, cumulative_detector_signal,
-##            unrot_contribution, unrot_reconstruction,
-##            pulses_delivered, camera_exposures='%i'%camera_exposures)
-##        print()
-##    animate(input_filenames=rescan_line_filenames,
-##            output_filename=('rescan_line_' + which_comp + '_' + im_name +
-##                             '_%ix%i'%(fov_size, fov_size)))
-
-
-
-
-
-
-
-
-##"""
-##The rescan ratio depends on the relative size of the excitation and
-##emission width. For example, see De Luca and Manders, doi:10.1364/BOE.4.002644
-##"""
-##rescan_ratio = ((emission_sigma / excitation_sigma)**2 + 1)
-##
-##reconstruction_inst = np.zeros_like(obj)
-##reconstruction_cumu = np.zeros_like(obj)
-##rescanned_signal = np.zeros((
-##    obj.shape[0], int(rescan_ratio * obj.shape[1]), obj.shape[2]))
-##rescanned_signal_cumu = np.zeros((
-##    obj.shape[0], int(rescan_ratio * obj.shape[1]), obj.shape[2]))
-##for scan_position in range(obj.shape[1]):
-##    print("\rScan position:", scan_position)
-##    """
-##    Algorithm:
-##     * Scan the excitation, save the result. 
-##     * Save the object too, to simplify overlaying in ImageJ.
-##     * Multiply the object by excitation to give the "glow"
-##     * Blur the excited object with the emission PSF
-##     * Unroll the blurred excited object, and save it; this is what a
-##       camera would see in a descanned system.
-##     * Roll the blurred excited object to the rescan position, and save
-##       it; this is what a camera would see in a rescanned system.
-##    """
-##    scanned_excitation = np.roll(excitation,
-##                                 scan_position - obj.shape[1]//2, axis=1)
-##    np_tif.array_to_tif(
-##        scanned_excitation,
-##        'Figure_2_output/1_excitation/excitation_%06i.tif'%(scan_position))
-##    np_tif.array_to_tif(
-##        obj,
-##        'Figure_2_output/2_object/object_%06i.tif'%(scan_position))
-##    glow = gaussian_filter(obj * scanned_excitation, sigma=emission_sigma)
-##    np_tif.array_to_tif(
-##        glow,
-##        'Figure_2_output/3_glow/glow_%06i.tif'%(scan_position))
-##    descanned_signal = np.roll(glow, obj.shape[1]//2 - scan_position, axis=1)
-##    np_tif.array_to_tif(
-##        descanned_signal,
-##        'Figure_2_output/4_descanned_signal/descanned_signal_%06i.tif'%(scan_position))
-##    reconstruction_inst.fill(0)
-##    reconstruction_inst[0, scan_position, :] = descanned_signal.sum(axis=1)
-##    np_tif.array_to_tif(
-##        reconstruction_inst,
-##        'Figure_2_output/5_reconstruction_inst/reconstruction_inst_%06i.tif'%(
-##            scan_position))
-##    reconstruction_cumu[0, scan_position, :] = descanned_signal.sum(axis=1)
-##    np_tif.array_to_tif(
-##        reconstruction_cumu,
-##        'Figure_2_output/6_reconstruction_cumu/reconstruction_cumu_%06i.tif'%(
-##            scan_position))
-##    rescanned_signal.fill(0)
-##    rescanned_signal[0, :obj.shape[1], :] = descanned_signal
-##    rescanned_signal = np.roll(
-##        rescanned_signal,
-##        (int(rescan_ratio) * scan_position) -obj.shape[1] // 2,
-##        axis=1)
-##    np_tif.array_to_tif(
-##        rescanned_signal,
-##        'Figure_2_output/7_rescanned_signal/rescanned_signal_%06i.tif'%(scan_position))
-##    rescanned_signal_cumu += rescanned_signal
-##    np_tif.array_to_tif(
-##        rescanned_signal_cumu,
-##        'Figure_2_output/8_rescanned_signal_cumu/rescanned_signal_cumu_%06i.tif'%(
-##            scan_position))
