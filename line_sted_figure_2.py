@@ -54,7 +54,7 @@ def calculate_psfs(output_prefix):
         comparisons = pickle.load(open(comparison_filename, 'rb'))
     else:
         comparisons = {}
-        comparisons['1p0x'] = psf_comparison_pair(
+        comparisons['1p0x_ld'] = psf_comparison_pair(
             point_resolution_improvement=0.99, #Juuust under 1, ensures no STED
             line_resolution_improvement=0.99,
             point_emissions_per_molecule=4,
@@ -62,40 +62,83 @@ def calculate_psfs(output_prefix):
             line_scan_type='descanned',
             line_num_orientations=1,
             max_excitation_brightness=0.01) # Without STED, no point saturating
-        comparisons['1p5x'] = psf_comparison_pair(
+        comparisons['1p0x_lr'] = psf_comparison_pair(
+            point_resolution_improvement=0.99, #Juuust under 1, ensures no STED
+            line_resolution_improvement=1.38282445,
+            point_emissions_per_molecule=4,
+            line_emissions_per_molecule=4,
+            line_scan_type='rescanned',
+            line_num_orientations=2,
+            max_excitation_brightness=0.01) # Without STED, no point saturating
+        comparisons['1p5x_ld'] = psf_comparison_pair(
             point_resolution_improvement=1.5,
             line_resolution_improvement=2.68125,
             point_emissions_per_molecule=4,
             line_emissions_per_molecule=2.825,
             line_scan_type='descanned',
             line_num_orientations=3)
-        comparisons['2p0x'] = psf_comparison_pair(
+        comparisons['1p5x_lr'] = psf_comparison_pair(
+            point_resolution_improvement=1.5,
+            line_resolution_improvement=2.95425,
+            point_emissions_per_molecule=4,
+            line_emissions_per_molecule=2.618,
+            line_scan_type='rescanned',
+            line_num_orientations=3)
+        comparisons['2p0x_ld'] = psf_comparison_pair(
             point_resolution_improvement=2,
             line_resolution_improvement=4.04057,
             point_emissions_per_molecule=4,
             line_emissions_per_molecule=3.007,
             line_scan_type='descanned',
             line_num_orientations=4)
-        comparisons['2p5x'] = psf_comparison_pair(
+        comparisons['2p0x_lr'] = psf_comparison_pair(
+            point_resolution_improvement=2,
+            line_resolution_improvement=4.07614,
+            point_emissions_per_molecule=4,
+            line_emissions_per_molecule=3.0227,
+            line_scan_type='rescanned',
+            line_num_orientations=4)
+        comparisons['2p5x_ld'] = psf_comparison_pair(
             point_resolution_improvement=2.5,
             line_resolution_improvement=5.13325,
             point_emissions_per_molecule=4,
             line_emissions_per_molecule=3.792,
             line_scan_type='descanned',
             line_num_orientations=6)
-        comparisons['3p0x'] = psf_comparison_pair(
+        comparisons['2p5x_lr'] = psf_comparison_pair(
+            point_resolution_improvement=2.5,
+            line_resolution_improvement=5.15129,
+            point_emissions_per_molecule=4,
+            line_emissions_per_molecule=3.8,
+            line_scan_type='rescanned',
+            line_num_orientations=6)
+        comparisons['3p0x_ld'] = psf_comparison_pair(
             point_resolution_improvement=3,
             line_resolution_improvement=5.94563,
             point_emissions_per_molecule=4,
             line_emissions_per_molecule=5.034,
             line_scan_type='descanned',
             line_num_orientations=8)
-        comparisons['4p0x'] = psf_comparison_pair(
+        comparisons['3p0x_lr'] = psf_comparison_pair(
+            point_resolution_improvement=3,
+            line_resolution_improvement=5.95587,
+            point_emissions_per_molecule=4,
+            line_emissions_per_molecule=5.0385,
+            line_scan_type='rescanned',
+            line_num_orientations=8)
+        comparisons['4p0x_ld'] = psf_comparison_pair(
             point_resolution_improvement=4,
             line_resolution_improvement=7.8386627,
             point_emissions_per_molecule=4,
             line_emissions_per_molecule=7.371,
             line_scan_type='descanned',
+            line_num_orientations=10)
+        comparisons['4p0x_lr'] = psf_comparison_pair(
+            point_resolution_improvement=4,
+            line_resolution_improvement=7.840982,
+            point_emissions_per_molecule=4,
+            line_emissions_per_molecule=7.37195,
+            line_scan_type='rescanned',
             line_num_orientations=10)
         print("Done calculating PSFs.\n")
         if not os.path.exists(output_prefix): os.mkdir(output_prefix)
@@ -242,28 +285,29 @@ def create_figure(comparisons, output_prefix, im_name):
             plt.imshow(point_estimate, cmap=plt.cm.gray)
             ax.axes.get_xaxis().set_ticks([])
             ax.axes.get_yaxis().set_ticks([])
-            if c == '1p0x':
+            if c.startswith('1p0x'):
                 ax.set_xlabel("(a) Point confocal")
             else:
-                ax.set_xlabel("(a) Point STED")
+                ax.set_xlabel("(a) Point STED, R=%0.1f"%(
+                    comparisons[c]['point']['resolution_improvement_descanned']))
             ax = plt.subplot(1, 3, 2)
             plt.imshow(line_estimate, cmap=plt.cm.gray)
             ax.axes.get_xaxis().set_ticks([])
             ax.axes.get_yaxis().set_ticks([])
-            if c == '1p0x':
-                ax.set_xlabel("(b) %i-line confocal"%num_angles)
+            if c.startswith('1p0x'):
+                ax.set_xlabel("(b) %i-line confocal with equal dose"%num_angles)
             else:
-                ax.set_xlabel("(b) %i-line STED"%num_angles)
+                ax.set_xlabel("(b) %i-line STED with equal dose"%num_angles)
             ax = plt.subplot(1, 3, 3)
             plt.imshow((point_estimate, line_estimate)[i], cmap=plt.cm.gray)
             ax.axes.get_xaxis().set_ticks([])
             ax.axes.get_yaxis().set_ticks([])
-            if c == '1p0x':
-                ax.set_xlabel(("(c) Point confocal",
-                               "(c) %i-line confocal"%num_angles)[i])
+            if c.startswith('1p0x'):
+                ax.set_xlabel(("(c) Comparison (point confocal)",
+                               "(c) Comparison (%i-line confocal)"%num_angles)[i])
             else:
-                ax.set_xlabel(("(c) Point STED",
-                               "(c) %i-line STED"%num_angles)[i])
+                ax.set_xlabel(("(c) Comparison (point STED)",
+                               "(c) Comparison (%i-line STED)"%num_angles)[i])
             plt.subplots_adjust(left=0, bottom=0, right=1, top=1,
                                 wspace=0, hspace=0)
             plt.savefig(os.path.join(
