@@ -1,0 +1,252 @@
+<!-- 
+##############################################################
+Ignore this boilerplate if you're just trying to edit the text.
+Skip to the part that says 'The real text begins here'
+##############################################################
+
+Based on this theme: https://github.com/broccolini/dinky , which mentioned that attribution is appreciated. Thanks, broccolini!
+-->
+<!doctype html>
+<html>
+  <head>
+    <base target="_blank">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>line-rescan-sted by AndrewGYork</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/prism.css">
+    <script src="javascript/scale-fix/scale.fix.js"></script>
+    <script src="javascript/python-highlighting/prism.js"></script>
+    <script async  src="javascript/Minimal-MathJax/MathJax.js?config=TeX-AMS_CHTML"></script>
+    <script src="javascript/update_figures.js"></script>
+    <script src="javascript/reference_list/reference_list.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1 class="header">Line-rescan-sted</h1>
+        <p class="header"></p>
+
+        <ul>
+          <li class="download"><a class="buttons" href="https://github.com/AndrewGYork/publication-template/zipball/master">Download ZIP</a></li>
+          <li><a class="buttons github" href="https://github.com/AndrewGYork/publication-template" target="_blanks">View On GitHub</a></li>
+        </ul>
+
+        <p class="header">This project is maintained by <a class="header name" href="https://github.com/AndrewGYork">AndrewGYork</a></p>
+      </header>
+<!-- 
+##############################################################
+The real text begins here.
+##############################################################
+ -->
+<section>
+<h1>Appendix</h1>
+<h2> Line-rescanned STED microscopy is gentler and faster than point-descanned STED microscopy</h2>
+<p><a href="./index.html" title="Main text">Back to the main text</a></p>
+
+<h3>
+<a name="Assumptions">Assumptions</a></h3>
+<p>
+Simulations in this article assume the following:
+<ul><li>Two-dimensional imaging, with the effect of confocal pinholes (or slits) neglected. This is equivalent to imaging a thin sample with the confocal pinhole open wide.
+</li><li> The excitation and depletion beams are pulsed.
+</li><li> Pulse durations are short compared to the fluorescent lifetime. This means pulse fluence is all that matters for calculating excitation and depletion probability. ('Fluence' means the energy per unit area delivered by one pulse.)
+</li><li> The pulse repetition period is long compared to fluorescent (and triplet) lifetime. I'm not going to worry about triplet-state excitation, and effects relevant to T-REX are orthogonal to the methods we're considering.
+</li><li> The emission point-spread function (PSF) is Gaussian. The exact PSF shape is not an interesting detail.
+</li><li> The excitation illumination shape is Gaussian, same width as the emission PSF. This neglects the Stokes shift.
+</li><li> The depletion illumination shape is difference-of-Gaussians, and the inner Gaussian is the same width as the emission PSF. The exact depletion beam shape is not an interesting detail, but this is at least in the right ballpark, and doesn't exceed the bandwidth of the excitation/emission PSFs.
+</li><li> 100% of excited molecules that are allowed to emit produce a photoelectron on the detector. Too optimistic, of course, but this gives an upper bound on signal levels, and gives results proportional to the truth.
+</li></ul></p>
+
+<h3>
+<a name="Units"> Units</a></h3>
+<p>
+<ul><li> Distance is measured in excitation PSF widths. Excitation PSF full-width at half-maximum is 1 unit wide, by definition.
+</li><li> Excitation fluence is measured in saturation units. An excitation pulse fluence of \(F\) is expected to excite a fraction \(1 - 2^{-F}\) of the ground-state fluorophores it illuminates.
+</li><li> Depletion fluence is also measured in saturation units. A depletion pulse fluence of \(F\) is expected to deplete a fraction \(1 - 2^{-F}\) of excited fluorophores it illuminates.
+</li><li> Time is measured in number of excitation/depletion pulse pairs, since signal emission is probably the relevant speed limit, and pulses are spaced by at least the fluorescent lifetime. Neither mechanical scanning nor available illumination intensity are likely to (insurmountably) limit speed. Data rates (photoelectrons, pixels and bytes per second from the detector) are potentially a practical speed limit, and worth considering, but probably favor rescan line STED (multipixel detectors) over descanned point STED (single-pixel detectors).
+</li></ul></p>
+
+<h3>
+<a name="Tuning STED"> Tuning parameters for STED imaging</a></h3>
+<p>
+ A correctly tuned STED microscope doesn't have as many degrees of freedom as <a href="./index.html#Figure 1">Figure 1</a> suggests. If multiple combinations of <code>Excitation</code>, <code>Depletion</code>, <code>Scan density</code> and <code>Exposure time</code> give the same image quality (meaning, the same resolution and emissions per molecule), the combination which gives the lowest photodose is the correct choice. There are many ways to choose poorly. For example:
+</p>
+<ul><li> <strong>Undersaturating excitation leads to excessive depletion dose.</strong>
+<p>
+ Compare <code>Excitation: 0.25</code>, <code>Exposure time: 4</code> vs. <code>Excitation:1</code>, <code>Exposure time 1</code>, which give similar emissions per molecule, but very different depletion doses.
+</p>
+</li><li> <strong>Saturating excitation leads to excessive excitation dose</strong>
+<p>
+ Compare <code>Excitation: 1</code>, <code>Exposure time: 2</code> vs. <code>Excitation 4</code>, <code>Exposure time: 1</code>, which give similar emissions per molecule, but very different excitation doses.
+</p>
+</li><li> <strong>Oversampling the STED PSF leads to excessive depletion dose.</strong>
+<p>
+ Compare <code>Depletion: 3</code>, <code>Scan density: 6</code> vs. <code>Depletion: 3</code>, <code>Scan density: 12</code>, which give the same PSF-limited resolution, but very different depletion doses.
+</p>
+</li><li> <strong>Undersampling the STED PSF leads to excessive depletion dose and low signal.</strong>
+<p>
+ Compare <code>Depletion: 3</code>, <code>Scan density: 6</code> vs. <code>Depletion: 27</code>, <code>Scan density: 6</code>, which give the same Nyquist-limited resolution, but very different depletion doses and emissions per molecule.
+</p><p>
+ <code>Exposure time</code> and <code>Excitation</code> aren't really independent choices, they're primarily determined by the desired emissions per molecule. There's room for a little tuning: for a given resolution and emission level, saturated excitation and short exposure times minimize depletion dose, while unsaturated excitation and long exposure times minimize excitation dose. Depending on how tolerant the sample is of excitation vs. depletion light, you might want to bias one way or the other. <code>Scan density</code> and <code>Depletion</code> aren't independent choices at all; they're both determined by the desired resolution improvement \(R\), and there's zero incentive to change one without changing the other to match.
+</p>
+
+<h3>
+<a name="Comparing gentleness"> Comparing "gentleness"</a></h3>
+<p>
+ How should we compare two techniques to decide which is gentler? One reasonable definition is that a gentler technique requires less photodose to achieve the same image quality. Equivalently, <strong>a gentler technique gives higher image quality for the same photodose</strong>, which is the definition I use for comparisons in Figure 2. Of course, we must define what we mean by photodose and image quality if we want to make meaningful, quantitative comparisons.
+<h4>
+<a name="Comparing photodose"> Comparing photodose</a></h4>
+<p>
+ One reasonable metric of photodose is cumulative excitation fluence and depletion fluence delivered to each sample position during imaging (per-pulse fluence, summed over the scan positions, multiplied by the number of pulses per scan position, which is approximately uniform over the field of view except near the edges). This two-parameter metric makes it difficult to define useful "greater than, less than" comparisons; is an excitation dose of 5 and a depletion dose of 500 meaningfully gentler than an excitation dose of 50 and a depletion dose of zero?
+</p><p>
+ In <a href="./index.html#Figure 2">Figure 2</a>, I want to avoid any ambiguities while comparing point STED vs. line STED, so <strong>I always compare the two techniques at equal excitation dose, and equal depletion dose</strong>. If the two techniques are given the same "damage budget", which one gives us higher image quality? Of course, sample damage due to STED photodose will depend sensitively on the implementation of the STED device and the nature of the sample, and the tolerance for excitation fluence vs. depletion fluence will certainly vary from sample to sample. Nonetheless, two techniques which deliver the same photodose with the same excitation and depletion colors, similar pulse durations, and similar peak pulse fluence will likely cause similar photodamage.
+</p>
+<h4>
+<a name="Comparing image quality"> Comparing image quality</a></h4>
+<p>
+ If "photodose" is tricky to define and compare quantitatively, "image quality" is nearly impossible; there's an effectively infinite variety of ways an image can be wrong or misleading. In this article's simulations, I know the true object, so I can use my preferred metric of image quality: <strong>a plot of reconstruction error vs. spatial frequency</strong>. More precisely, I Fourier transform the difference between the true object and the reconstructed object, and display the Fourier amplitudes as an image, using a logarithmic intensity scale. A bigger, blacker central region means a better reconstruction. Why do I prefer this metric?
+</p><p>
+ If you interpret a microscope image as an answer to the question "where are the fluorophores?", you're simultaneously asking three questions:
+</p>
+<ul><li> <strong>What are the amplitudes and phases of the low spatial frequency components of the fluorophore density?</strong>
+<p>
+ Getting low spatial frequencies wrong is unacceptable. A microscope image is a noisy low-pass filtered version of the sample's fluorophore density. This is typically an excellent estimate of low spatial frequencies, and deconvolution can reduce systematic errors due to the filtering.
+</p>
+</li><li> <strong>What are the amplitudes and phases of the high spatial frequency components of the fluorophore density?</strong>
+<p>
+ Getting high spatial frequencies wrong is guaranteed; there is always some frequency above which effectively nothing is known. The only appropriate answer is "I don't know". Note that "zero" is often used as a substitute for "I don't know", but is absolutely not the same thing.
+</p>
+</li><li> <strong>Which spatial frequencies are "low", and which are "high"?</strong>
+<p>
+ To interpret an image, we must judge which spatial frequencies are known (low), and which are unknown (high). Which spatial frequencies survive the measurement (low-pass filtering) are primarily determined by the PSF(s) of the microscope (the filter), and the spatial frequencies amplitudes of the sample (the input to the filter). The constraint that the sample is non-negative sometimes allows us to infer spatial frequencies which are not directly measured, especially for samples with large regions of nearly-zero density.
+</p></li></ul>
+<p>
+ Asking multiple questions at once is a good way to get a bad answer, especially when the questions aren't equally difficult. Suppose I asked you the average of today's temperature, and the temperature a million years into the future. How should you answer? The best answer is probably not a number, and it's certainly not to assume that the future temperature is zero. Perhaps the best answer would be, "I don't know, and that's a dumb question; you should ask me about those quantities separately." 
+</p><p>
+ Real-space metrics of image quality (for example, mean-squared error) typically ask exactly this type of mixed multiple question, asking for known low frequencies and unknown high frequencies  simultaneously, and penalizing guaranteed-to-be-wrong answers about high spatial frequencies. Low-pass filtered real-space metrics of image quality are more defensible, but the optimal choice of low-pass filter depends on the object being imaged.
+</p><p>
+ A plot of reconstruction error vs. spatial frequency cleanly avoids such problems; the transition in <a href="./index.html#Figure 2">Figure 2</a>(d, e) is obvious, and known quantities are characterized separately from unknown quantities. Image quality via this metric (or any other) is certainly subjective and certainly not well-ordered. However, if one imaging method produces a larger region of known frequencies compared to another, and error is strictly lower in this region, than we can conclude the lower-error method is better. In conclusion: <strong>if line STED gives a larger region of lower Fourier error compared to point STED, for the same cumulative excitation and depletion fluence, then line STED is gentler than point STED.</strong> As my simulations in <a href="./index.html#Figure 2">Figure 2</a> show, it does, for the entire range of resolution improvements I've checked.
+</p>
+
+<h3>
+<a name="Figure 2 parameters"> Figure 2 simulation parameters</a></h3>
+<p>
+ As discussed above, <a href="index.html#Tuning STED">a correctly tuned STED microscope</a> doesn't have as many degrees of freedom as Figure 1 suggests. In <a href="index.html#Figure 2">Figure 2</a>, rather than choose <code>Excitation</code>, <code>Depletion</code>, <code>Scan Density</code>, and <code>Exposure time</code> independently, we instead choose a desired resolution improvement and signal level for descan point-STED, and my code solves for the inputs which will give this output. To avoid excessive excitation dose or depletion dose, we minimize <code>Exposure time</code> subject to the constraint that <code>Excitation < 0.25</code>.
+</p><p>
+ After parameters are chosen for point-STED, I choose resolution improvement and signal level for descan and rescan line-STED that will give <a href="./appendix.html#Comparing photodose">the same excitation and depletion dose</a> as point-STED, and my code solves for the inputs which will give this output, subject to the same minimization of <code>Exposure time</code> and constraint that <code>Excitation < 0.25</code>. For each comparison, I choose the number of line-STED orientations to give <a href="./appendix.html#Comparing image quality">strictly better image quality</a> than point-STED; this number increases with increased resolution.
+</p><p>
+ Note that we could use fewer orientations to increase acquisition speed and reduce depletion dose at the expense of "strictly better" image quality (some directions would have worse resolution than point STED, some would have better). In my experience, many real-life imaging challenges tolerate substantial resolution anisotropy. Here, my goal is the cleanest comparison of gentleness between point-STED and line-STED, so I stick to comparisons which are well-ordered.
+</p><p>
+The table below summarizes the resulting parameters used in <a href="./index.html#Figure 2">Figure 2</a>. The punchline: anything point-STED can do, line-STED can do better.
+</p>
+<div>
+<style scoped>
+table, th, td {
+    border: 1px solid black;
+    text-align: center;
+    padding: 0px;
+}
+</style>
+<table>
+  <tr>
+    <th>Excitation dose</th>
+    <th>Depletion dose</th>
+    <th>Method</th>
+    <th>Peak R</th>
+    <th>Emissions</th>
+    <th>Orientations</th>
+  </tr><tr>
+    <td rowspan="3">5.8</td><td rowspan="3">0.0</td>
+    <td>Descan point</td><td>1.00x</td><td>4.00</td> </tr><tr>
+    <td>Descan line </td><td>1.00x</td><td>4.00</td><td>1</td> </tr><tr>
+    <td>Rescan line </td><td>1.38x</td><td>4.00</td><td>2</td>
+  </tr><tr>
+    <td rowspan="3">11.4</td><td rowspan="3">500.3</td>
+    <td>Descan point</td><td>1.50x</td><td>4.00</td> </tr><tr>
+    <td>Descan line </td><td>2.68x</td><td>2.83</td><td rowspan="2">3</td> </tr><tr>
+    <td>Rescan line </td><td>2.95x</td><td>2.62</td>
+  </tr><tr>
+    <td rowspan="3">18.8</td><td rowspan="3">1696.8</td>
+    <td>Descan point</td><td>2.00x</td><td>4.00</td> </tr><tr>
+    <td>Descan line </td><td>4.04x</td><td>3.01</td><td rowspan="2">4</td> </tr><tr>
+    <td>Rescan line </td><td>4.08x</td><td>3.02</td>
+  </tr><tr>
+    <td rowspan="3">30.3</td><td rowspan="3">4159.5</td>
+    <td>Descan point</td><td>2.50x</td><td>4.00</td> </tr><tr>
+    <td>Descan line </td><td>5.13x</td><td>3.79</td><td rowspan="2">6</td> </tr><tr>
+    <td>Rescan line </td><td>5.15x</td><td>3.80</td>
+  </tr><tr>
+    <td rowspan="3">46.7</td><td rowspan="3">8601.8</td>
+    <td>Descan point</td><td>3.00x</td><td>4.00</td> </tr><tr>
+    <td>Descan line </td><td>5.95x</td><td>5.03</td><td rowspan="2">8</td> </tr><tr>
+    <td>Rescan line </td><td>5.96x</td><td>5.04</td>
+  </tr><tr>
+    <td rowspan="3">90.7</td><td rowspan="3">27044.0</td>
+    <td>Descan point</td><td>4.00x</td><td>4.00</td> </tr><tr>
+    <td>Descan line </td><td>7.84x</td><td>7.37</td><td rowspan="2">10</td> </tr><tr>
+    <td>Rescan line </td><td>7.84x</td><td>7.37</td>
+  </tr>
+</table>
+</div>
+
+<h3>
+<a name="Speed"> Speed limits in microscopy</a></h3>
+<p>
+I need to establish that speed can be boiled down to two numbers: number of camera exposures, and number of scan positions. This is complicated, because it's not quite so simple.
+</p>
+Speed considerations:
+
+ Photons per second
+
+ Intensity measurements per second
+
+ Scan positions per second
+
+ Laser pulses per second
+
+ Other overhead (non-fundamental but common)
+
+ Non-poisson noise per intensity measurement. (Since this reduces SNR, it effectively reduces photons per second)
+
+How does speed scale with field of view?
+
+How does laser brightness scale with field of view?
+
+Descanned single-point STED is fundamentally limited by photons per second.
+
+Scanned multi-point STED is currently limited by intensity measurements per second, and frames per second. It also suffers from increased read noise.
+
+Descanned line-STED is currently limited by intensity measurements per second, and frames per second. It also suffers from increased read noise, and is further limited by K-mirror rotation speed.
+
+Rescanned line-STED 
+
+
+
+<h3>
+<a name="Pastries"> Pastries</a></h3>
+<p>
+Several times in the article, I describe shapes by reference to pastries. In case international readers aren't familiar with the foods I'm referring to, this is what I mean when I say "doughnut":
+</p><p>
+<img alt="A picture of a doughnut" width="50%" src="./images/doughnut.jpg">
+</p><p>
+...and this is what I mean when I say "eclair":
+</p><p>
+<img alt="A picture of an eclair" style="border-width:0" src="./images/eclair.jpg">
+</p>
+
+</section>
+<footer>
+  <a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="./images/cc_by_4p0.png"></a>
+
+  <p><small>Hosted on <a href="https://pages.github.com">GitHub Pages</a></small></p>
+</footer>
+</div>
+ <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+</body>
+</html>
