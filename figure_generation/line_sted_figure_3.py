@@ -1,4 +1,6 @@
 import os
+import shutil
+import warnings
 from subprocess import check_call
 import numpy as np
 import matplotlib.pyplot as plt
@@ -382,7 +384,9 @@ def scale_y(x, scaling_factor):
     assert len(x.shape) == 3 and x.shape[0] == 1 and x.shape[1] > 1
     assert float(scaling_factor) == scaling_factor
     original_shape = x.shape
-    scaled = interpolation.zoom(x[0, :, :], zoom=(scaling_factor, 1))
+    with warnings.catch_warnings():
+        warnings.simplefilter('ignore')
+        scaled = interpolation.zoom(x[0, :, :], zoom=(scaling_factor, 1))
     y_dif = original_shape[-2] - scaled.shape[-2]
     padded_x = np.pad(scaled, ((y_dif//2, y_dif-y_dif//2), (0, 0)), 'constant')
     return padded_x.reshape(original_shape)

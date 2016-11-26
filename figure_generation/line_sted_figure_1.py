@@ -64,6 +64,7 @@ def create_figure(
     # Plotting
     ###################
     fig = plt.figure(figsize=(20, 5), dpi=100)
+    fig.text(x=0.21, y=0.02, s='.', color='white') #Hack, for consistent margins
     fig.text(x=0.23, y=0.02, s="(d)", fontsize=15)
     fig.text(x=0.25, y=-0.01, s='' + 
         "Excitation dose:%8s\n"%(

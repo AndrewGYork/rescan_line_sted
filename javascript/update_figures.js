@@ -5,6 +5,7 @@ var img = new Image();
 img.onerror = function() {
   window.big_image_directory = "https://andrewgyork.github.io/line-rescan-sted-data/big_images";
   img.src = big_image_directory + "/figure_1/point_1p00exc_9p00dep_008samps_001pulses.svg"
+  img.onerror = ""
 }
 img.onload = function() {
   console.log("Loading interactive images from: " + big_image_directory)
