@@ -1,3 +1,4 @@
+<!doctype html>
 <!-- 
 ##############################################################
 Ignore this boilerplate if you're just trying to edit the text.
@@ -6,8 +7,7 @@ Skip to the part that says 'The real text begins here'
 
 Based on this theme: https://github.com/broccolini/dinky , which mentioned that attribution is appreciated. Thanks, broccolini!
 -->
-<!doctype html>
-<html>
+<html lang="en">
   <head>
     <base target="_blank">
     <meta charset="utf-8">
@@ -34,7 +34,7 @@ Based on this theme: https://github.com/broccolini/dinky , which mentioned that 
 
         <ul>
           <li class="download"><a class="buttons" href="https://github.com/AndrewGYork/rescan_line_sted/zipball/master">Download ZIP</a></li>
-          <li><a class="buttons github" href="https://github.com/AndrewGYork/rescan_line_sted" target="_blanks">View On GitHub</a></li>
+          <li><a class="buttons github" href="https://github.com/AndrewGYork/rescan_line_sted" target="_blank">View On GitHub</a></li>
         </ul>
 
         <p class="header">This project is maintained by <a class="header name" href="https://github.com/AndrewGYork">AndrewGYork</a></p>
@@ -49,10 +49,11 @@ The real text begins here.
 <h2> Line-rescanned STED microscopy is gentler and faster than point-descanned STED microscopy</h2>
 <p><a href="./index.html" title="Main text">Back to the main text</a></p>
 
-<h3>
-<a name="Assumptions">Assumptions</a></h3>
+<h3 id="Assumptions">
+Assumptions</h3>
 <p>
 Simulations in this article assume the following:
+</p>
 <ul><li>Two-dimensional imaging, with the effect of confocal pinholes (or slits) neglected. This is equivalent to imaging a thin sample with the confocal pinhole open wide.
 </li><li> The excitation and depletion beams are pulsed.
 </li><li> Pulse durations are short compared to the fluorescent lifetime. This means pulse fluence is all that matters for calculating excitation and depletion probability. ('Fluence' means the energy per unit area delivered by one pulse.)
@@ -61,21 +62,20 @@ Simulations in this article assume the following:
 </li><li> The excitation illumination shape is Gaussian, same width as the emission PSF. This neglects the Stokes shift.
 </li><li> The depletion illumination shape is difference-of-Gaussians, and the inner Gaussian is the same width as the emission PSF. The exact depletion beam shape is not an interesting detail, but this is at least in the right ballpark, and doesn't exceed the bandwidth of the excitation/emission PSFs.
 </li><li> 100% of excited molecules that are allowed to emit produce a photoelectron on the detector. Too optimistic, of course, but this gives an upper bound on signal levels, and gives results proportional to the truth.
-</li></ul></p>
+</li></ul>
 
-<h3>
-<a name="Units"> Units</a></h3>
-<p>
+<h3 id="Units">
+Units</h3>
 <ul><li> Distance is measured in excitation PSF widths. Excitation PSF full-width at half-maximum is 1 unit wide, by definition.
 </li><li> Excitation fluence is measured in saturation units. An excitation pulse fluence of \(F\) is expected to excite a fraction \(1 - 2^{-F}\) of the ground-state fluorophores it illuminates.
 </li><li> Depletion fluence is also measured in saturation units. A depletion pulse fluence of \(F\) is expected to deplete a fraction \(1 - 2^{-F}\) of excited fluorophores it illuminates.
 </li><li> Time is measured in number of excitation/depletion pulse pairs, since signal emission is probably the relevant speed limit, and pulses are spaced by at least the fluorescent lifetime. Neither mechanical scanning nor available illumination intensity are likely to (insurmountably) limit speed. Data rates (photoelectrons, pixels and bytes per second from the detector) are potentially a practical speed limit, and worth considering, but probably favor rescan line STED (multipixel detectors) over descanned point STED (single-pixel detectors).
-</li></ul></p>
+</li></ul>
 
-<h3>
-<a name="Tuning STED"> Tuning parameters for STED imaging</a></h3>
+<h3 id="Tuning_STED">
+Tuning parameters for STED imaging</h3>
 <p>
- A correctly tuned STED microscope doesn't have as many degrees of freedom as <a href="./index.html#Figure 1">Figure 1</a> suggests. If multiple combinations of <code>Excitation</code>, <code>Depletion</code>, <code>Scan density</code> and <code>Exposure time</code> give the same image quality (meaning, the same resolution and emissions per molecule), the combination which gives the lowest photodose is the correct choice. There are many ways to choose poorly. For example:
+ A correctly tuned STED microscope doesn't have as many degrees of freedom as <a href="./index.html#Figure_1">Figure 1</a> suggests. If multiple combinations of <code>Excitation</code>, <code>Depletion</code>, <code>Scan density</code> and <code>Exposure time</code> give the same image quality (meaning, the same resolution and emissions per molecule), the combination which gives the lowest photodose is the correct choice. There are many ways to choose poorly. For example:
 </p>
 <ul><li> <strong>Undersaturating excitation leads to excessive depletion dose.</strong>
 <p>
@@ -92,23 +92,24 @@ Simulations in this article assume the following:
 </li><li> <strong>Undersampling the STED PSF leads to excessive depletion dose and low signal.</strong>
 <p>
  Compare <code>Depletion: 3</code>, <code>Scan density: 6</code> vs. <code>Depletion: 27</code>, <code>Scan density: 6</code>, which give the same Nyquist-limited resolution, but very different depletion doses and emissions per molecule.
-</p><p>
+</p></li></ul><p>
  <code>Exposure time</code> and <code>Excitation</code> aren't really independent choices, they're primarily determined by the desired emissions per molecule. There's room for a little tuning: for a given resolution and emission level, saturated excitation and short exposure times minimize depletion dose, while unsaturated excitation and long exposure times minimize excitation dose. Depending on how tolerant the sample is of excitation vs. depletion light, you might want to bias one way or the other. <code>Scan density</code> and <code>Depletion</code> aren't independent choices at all; they're both determined by the desired resolution improvement \(R\), and there's zero incentive to change one without changing the other to match.
 </p>
 
-<h3>
-<a name="Comparing gentleness"> Comparing "gentleness"</a></h3>
+<h3 id="Comparing_gentleness">
+Comparing "gentleness"</h3>
 <p>
  How should we compare two techniques to decide which is gentler? One reasonable definition is that a gentler technique requires less photodose to achieve the same image quality. Equivalently, <strong>a gentler technique gives higher image quality for the same photodose</strong>, which is the definition I use for comparisons in Figure 2. Of course, we must define what we mean by photodose and image quality if we want to make meaningful, quantitative comparisons.
-<h4>
-<a name="Comparing photodose"> Comparing photodose</a></h4>
+</p>
+<h4 id="Comparing_photodose">
+Comparing photodose</h4>
 <p>
  One reasonable metric of photodose is cumulative excitation fluence and depletion fluence delivered to each sample position during imaging (per-pulse fluence, summed over the scan positions, multiplied by the number of pulses per scan position, which is approximately uniform over the field of view except near the edges). This two-parameter metric makes it difficult to define useful "greater than, less than" comparisons; is an excitation dose of 5 and a depletion dose of 500 meaningfully gentler than an excitation dose of 50 and a depletion dose of zero?
 </p><p>
- In <a href="./index.html#Figure 2">Figure 2</a>, I want to avoid any ambiguities while comparing point STED vs. line STED, so <strong>I always compare the two techniques at equal excitation dose, and equal depletion dose</strong>. If the two techniques are given the same "damage budget", which one gives us higher image quality? Of course, sample damage due to STED photodose will depend sensitively on the implementation of the STED device and the nature of the sample, and the tolerance for excitation fluence vs. depletion fluence will certainly vary from sample to sample. Nonetheless, two techniques which deliver the same photodose with the same excitation and depletion colors, similar pulse durations, and similar peak pulse fluence will likely cause similar photodamage.
+ In <a href="./index.html#Figure_2">Figure 2</a>, I want to avoid any ambiguities while comparing point STED vs. line STED, so <strong>I always compare the two techniques at equal excitation dose, and equal depletion dose</strong>. If the two techniques are given the same "damage budget", which one gives us higher image quality? Of course, sample damage due to STED photodose will depend sensitively on the implementation of the STED device and the nature of the sample, and the tolerance for excitation fluence vs. depletion fluence will certainly vary from sample to sample. Nonetheless, two techniques which deliver the same photodose with the same excitation and depletion colors, similar pulse durations, and similar peak pulse fluence will likely cause similar photodamage.
 </p>
-<h4>
-<a name="Comparing image quality"> Comparing image quality</a></h4>
+<h4 id="Comparing_image_quality">
+Comparing image quality</h4>
 <p>
  If "photodose" is tricky to define and compare quantitatively, "image quality" is nearly impossible; there's an effectively infinite variety of ways an image can be wrong or misleading. In this article's simulations, I know the true object, so I can use my preferred metric of image quality: <strong>a plot of reconstruction error vs. spatial frequency</strong>. More precisely, I Fourier transform the difference between the true object and the reconstructed object, and display the Fourier amplitudes as an image, using a logarithmic intensity scale. A bigger, blacker central region means a better reconstruction. Why do I prefer this metric?
 </p><p>
@@ -131,19 +132,19 @@ Simulations in this article assume the following:
 </p><p>
  Real-space metrics of image quality (for example, mean-squared error) typically ask exactly this type of mixed multiple question, asking for known low frequencies and unknown high frequencies  simultaneously, and penalizing guaranteed-to-be-wrong answers about high spatial frequencies. Low-pass filtered real-space metrics of image quality are more defensible, but the optimal choice of low-pass filter depends on the object being imaged.
 </p><p>
- A plot of reconstruction error vs. spatial frequency cleanly avoids such problems; the transition in <a href="./index.html#Figure 2">Figure 2</a>(d, e) is obvious, and known quantities are characterized separately from unknown quantities. Image quality via this metric (or any other) is certainly subjective and certainly not well-ordered. However, if one imaging method produces a larger region of known frequencies compared to another, and error is strictly lower in this region, than we can conclude the lower-error method is better. In conclusion: <strong>if line STED gives a larger region of lower Fourier error compared to point STED, for the same cumulative excitation and depletion fluence, then line STED is gentler than point STED.</strong> As my simulations in <a href="./index.html#Figure 2">Figure 2</a> show, it does, for the entire range of resolution improvements I've checked.
+ A plot of reconstruction error vs. spatial frequency cleanly avoids such problems; the transition in <a href="./index.html#Figure_2">Figure 2</a>(d, e) is obvious, and known quantities are characterized separately from unknown quantities. Image quality via this metric (or any other) is certainly subjective and certainly not well-ordered. However, if one imaging method produces a larger region of known frequencies compared to another, and error is strictly lower in this region, than we can conclude the lower-error method is better. In conclusion: <strong>if line STED gives a larger region of lower Fourier error compared to point STED, for the same cumulative excitation and depletion fluence, then line STED is gentler than point STED.</strong> As my simulations in <a href="./index.html#Figure_2">Figure 2</a> show, it does, for the entire range of resolution improvements I've checked.
 </p>
 
-<h3>
-<a name="Figure 2 parameters"> Figure 2 simulation parameters</a></h3>
+<h3 id=Figure_2_parameters>
+Figure 2 simulation parameters</h3>
 <p>
- As discussed above, <a href="index.html#Tuning STED">a correctly tuned STED microscope</a> doesn't have as many degrees of freedom as Figure 1 suggests. In <a href="index.html#Figure 2">Figure 2</a>, rather than choose <code>Excitation</code>, <code>Depletion</code>, <code>Scan Density</code>, and <code>Exposure time</code> independently, we instead choose a desired resolution improvement and signal level for descan point-STED, and my code solves for the inputs which will give this output. To avoid excessive excitation dose or depletion dose, we minimize <code>Exposure time</code> subject to the constraint that <code>Excitation < 0.25</code>.
+ As discussed above, <a href="index.html#Tuning_STED">a correctly tuned STED microscope</a> doesn't have as many degrees of freedom as Figure 1 suggests. In <a href="index.html#Figure_2">Figure 2</a>, rather than choose <code>Excitation</code>, <code>Depletion</code>, <code>Scan Density</code>, and <code>Exposure time</code> independently, we instead choose a desired resolution improvement and signal level for descan point-STED, and my code solves for the inputs which will give this output. To avoid excessive excitation dose or depletion dose, we minimize <code>Exposure time</code> subject to the constraint that <code>Excitation &lt; 0.25</code>.
 </p><p>
- After parameters are chosen for point-STED, I choose resolution improvement and signal level for descan and rescan line-STED that will give <a href="./appendix.html#Comparing photodose">the same excitation and depletion dose</a> as point-STED, and my code solves for the inputs which will give this output, subject to the same minimization of <code>Exposure time</code> and constraint that <code>Excitation < 0.25</code>. For each comparison, I choose the number of line-STED orientations to give <a href="./appendix.html#Comparing image quality">strictly better image quality</a> than point-STED; this number increases with increased resolution.
+ After parameters are chosen for point-STED, I choose resolution improvement and signal level for descan and rescan line-STED that will give <a href="./appendix.html#Comparing_photodose">the same excitation and depletion dose</a> as point-STED, and my code solves for the inputs which will give this output, subject to the same minimization of <code>Exposure time</code> and constraint that <code>Excitation &lt; 0.25</code>. For each comparison, I choose the number of line-STED orientations to give <a href="./appendix.html#Comparing_image_quality">strictly better image quality</a> than point-STED; this number increases with increased resolution.
 </p><p>
  Note that we could use fewer orientations to increase acquisition speed and reduce depletion dose at the expense of "strictly better" image quality (some directions would have worse resolution than point STED, some would have better). In my experience, many real-life imaging challenges tolerate substantial resolution anisotropy. Here, my goal is the cleanest comparison of gentleness between point-STED and line-STED, so I stick to comparisons which are well-ordered.
 </p><p>
-The table below summarizes the resulting parameters used in <a href="./index.html#Figure 2">Figure 2</a>. The punchline: anything point-STED can do, line-STED can do better.
+The table below summarizes the resulting parameters used in <a href="./index.html#Figure_2">Figure 2</a>. The punchline: anything point-STED can do, line-STED can do better.
 </p>
 <div>
 <style scoped>
@@ -195,8 +196,8 @@ table, th, td {
 </table>
 </div>
 
-<h3>
-<a name="Speed"> Speed limits in microscopy</a></h3>
+<h3 id="Speed">
+Speed limits in microscopy</h3>
 <p>
 I need to establish that speed can be boiled down to two numbers: number of camera exposures, and number of scan positions. This is complicated, because it's not quite so simple.
 </p>
@@ -228,20 +229,20 @@ Rescanned line-STED
 
 
 
-<h3>
-<a name="Pastries"> Pastries</a></h3>
+<h3 id="Pastries">
+Pastries</h3>
 <p>
 Several times in the article, I describe shapes by reference to pastries. In case international readers aren't familiar with the foods I'm referring to, this is what I mean when I say "doughnut":
 </p><p>
-<img alt="A picture of a doughnut" width="50%" src="./images/doughnut.jpg">
+<img alt="A picture of a doughnut" src="./images/doughnut.jpg">
 </p><p>
 ...and this is what I mean when I say "eclair":
 </p><p>
-<img alt="A picture of an eclair" style="border-width:0" src="./images/eclair.jpg">
+<img alt="A picture of an eclair" src="./images/eclair.jpg">
 </p>
 
-<h3>
-<a name="Code"> Code: <code>line_sted_figure_1.py</code>, <code>line_sted_figure_2.py</code>, <code>line_sted_figure_3.py</code></a></h3>
+<h3 id="line_sted_figure_x.py">
+Code: <code>line_sted_figure_1.py</code>, <code>line_sted_figure_2.py</code>, <code>line_sted_figure_3.py</code></h3>
 <p>
 The data for Figures 1, 2, and 3 are created by running the corresponding Python 3 modules <code>line_sted_figure_1.py</code>, <code>line_sted_figure_2.py</code>, and <code>line_sted_figure_3.py</code>. You can view these modules in the <a href="https://github.com/AndrewGYork/rescan_line_sted/tree/master/figure_generation"><code>rescan_line_sted</code> Github respository</a>. If you want to run or modify this code yourself, you'll need a <a href="https://www.python.org/downloads/">Python 3 environment</a>, and also the Python subpackages <a href="http://www.numpy.org/">Numpy</a>, <a href="https://www.scipy.org/">Scipy</a>, and <a href="http://matplotlib.org/">Matplotlib</a>. <a href="https://www.continuum.io/downloads">Anaconda</a> satisfies these requirements with a single installation; if you're new to Python, this is the approach I recommend.
 </p><p>
@@ -251,28 +252,35 @@ Most of this output is in <code>.svg</code> format, which Matplotlib generates d
 </p><p>
 Note that my figure generation code is mostly concerned with formatting the figures; you don't have to understand this code to understand my calculations. If you want to understand the calculations which the paper is based on, I recommend focusing on <code>line_sted_tools.py</code>.
 </p>
-<h3>
-<a name="Code"> Code: <code>line_sted_tools.py</code></a></h3>
+<h3 id="line_sted_tools.py">
+Code: <code>line_sted_tools.py</code></h3>
 <p>
  The <code>line_sted_tools.py</code> module defines the functions used to produce the data for Figures 1 and 2. You can view the full module in the <a href="https://github.com/AndrewGYork/rescan_line_sted/tree/master/figure_generation/line_sted_tools.py"><code>rescan_line_sted</code> Github respository</a>. For simplicity and readability, I've included simplified annotated versions of the most important functions.
 </p>
 <h4>
 <code>psf_report()</code></h4>
 <p>
-The primary function of this module. See the start of this Appendix for a lengthy list of <a href="./appendix.html#Assumptions">assumptions</a> made by this simulation.
-</p><pre><code class="language-python">def psf_report(
+The primary function of this module. See the start of this Appendix for a lengthy list of <a href="./appendix.html#Assumptions">assumptions</a> made by this simulation, and a description of the <a href="./appendix.html#Units">units</a> used.
+</p>
+<p>
+Note how the inputs to the function match the controls of <a href="./index.html#Figure_1">Figure 1</a>:
+<pre><code class="language-python">def psf_report(
     psf_type, #Point or line
     excitation_brightness, #Peak brightness in saturation units
     depletion_brightness, #Peak brightness in saturation units
     steps_per_excitation_psf_width, #Too small? Bad res. Too big? Excess dose.
     pulses_per_position, #Think of this as "dwell time"
     ):
-</code></pre><p>
-Note how the inputs to the function match the controls of <a href="./index.html#Figure 1">Figure 1</a>.</p><p>
-We call <code>generate_psfs()</code> to generate excitation and STED PSFs, and calculate their widths via Gaussian fitting:
-</p><pre><code class="language-python"
+</code></pre>
+<code>psf_report()</code> starts with a call to <code>generate_psfs()</code> to generate excitation and STED PSFs, which we'll use to plot Figure 1(a, b, c):
+<pre><code class="language-python"
 >    psfs = generate_psfs(excitation_brightness, depletion_brightness, psf_type)
-    central_line_ex = psfs['excitation'][0, num_steps//2, :]
+</code></pre>
+</p>
+<p>
+and calculate their widths via Gaussian fitting, and the resolution improvement
+</p><pre><code class="language-python"
+>    central_line_ex = psfs['excitation'][0, num_steps//2, :]
     central_line_st = psfs['sted'][0, num_steps//2, :]
     ex_sigma = get_width(central_line_ex)
     sted_sigma = get_width(central_line_st)
@@ -281,10 +289,7 @@ We call <code>generate_psfs()</code> to generate excitation and STED PSFs, and c
         central_line_rescan = psfs['rescan_sted'][0, num_steps//2, :]
         rescan_sigma = get_width(central_line_rescan)
         resolution_improvement_factor_rescanned = blur_sigma / rescan_sigma
-</code></pre><p>
-blah
-</p><pre><code class="language-python"
->    # Calculate emission levels and dose per pulse from the excitation
+    # Calculate emission levels and dose per pulse from the excitation
     # and depletion PSFs. Note that the scan pattern is very important
     # when calculating the illumnation dose! Point-sted requires a 2D
     # raster, compared to line STED which only needs a 1D scan. This
@@ -624,7 +629,7 @@ def tune_psf(
             (results['resolution_improvement_' + scan_type] -
              desired_resolution_improvement) /
             desired_resolution_improvement)
-        if (relative_resolution_error < relative_error):
+        if (relative_resolution_error &lt; relative_error):
             break
     if verbose_results:
         print("PSF tuning complete, after", num_iterations, "iterations.")
@@ -742,7 +747,7 @@ class Deconvolver:
         result = []
         for p in self.psfs:
             blurred_glow = fftconvolve(x, p, mode='same')
-            blurred_glow[blurred_glow < 0] = 0 #fft can give tiny negative vals
+            blurred_glow[blurred_glow &lt; 0] = 0 #fft can give tiny negative vals
             result.append(blurred_glow)
         return result
 
@@ -754,7 +759,7 @@ class Deconvolver:
         result = np.zeros(y[0].shape)
         for i in range(len(y)):
             blurred_ratio = fftconvolve(y[i], self.psfs[i], mode='same')
-            blurred_ratio[blurred_ratio < 0] = 0 #fft can give tiny negative vals
+            blurred_ratio[blurred_ratio &lt; 0] = 0 #fft can give tiny negative vals
             result += blurred_ratio
         if normalize:
             if not hasattr(self, 'H_t_normalization'):

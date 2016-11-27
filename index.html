@@ -1,3 +1,4 @@
+<!doctype html>
 <!-- 
 ##############################################################
 Ignore this boilerplate if you're just trying to edit the text.
@@ -6,8 +7,7 @@ Skip to the part that says 'The real text begins here'
 
 Based on this theme: https://github.com/broccolini/dinky , which mentioned that attribution is appreciated. Thanks, broccolini!
 -->
-<!doctype html>
-<html>
+<html lang="en">
   <head>
     <base target="_blank">
     <meta charset="utf-8">
@@ -87,12 +87,11 @@ STED improves microscope resolution at the expense of speed and gentleness</h4>
 <p>
  The STED technique uses an intense depletion ‘<a href="./appendix.html#Pastries">doughnut</a>’ (Fig. 1a, green) to shrink the fluorescence excitation region (Fig. 1b, dotted blue) of a point-scanning confocal microscope. As the illumination is scanned across to the sample (Figure 1a, 1b, gray), a fluorophore endures many excitation-depletion cycles before and after it is allowed to briefly emit signal (Figure 1b, solid blue). If the STED doughnut improves lateral resolution by a factor of \(R\) (Figure 1e), the 2D area of the emission region decreases by roughly \(R^2\) (reducing emissions per scan and emissions per second) and the number of scan positions (Figure 1a and 1b, gray) must increase by a factor of \(R^2\) to satisfy Nyquist sampling (Figure 1c, red). At least one full-intensity depletion pulse must be delivered at each of these finer scan positions to maintain \(R\), and of course the depletion pulse intensity grows rapidly with \(R\).
 </p>
-<p><a name="Figure 1"></a>
-<figure>
-<img src="./images/figure_1/point_1p00exc_9p00dep_008samps_001pulses.svg" alt="Figure 1" id="Figure 1 image">
+<figure id="Figure_1">
+<img src="./images/figure_1/point_1p00exc_9p00dep_008samps_001pulses.svg" alt="Figure 1" id="Figure_1_image">
 <table class="figure_controls">
   <tr>
-  <td>Depletion:</td><td><select id="Figure 1 depletion" onchange="update_figure_1()">
+  <td>Depletion:</td><td><select id="Figure_1_depletion" onchange="update_figure_1()">
     <option value="0p00dep_">0</option>
     <option value="1p00dep_">1</option>
     <option value="3p00dep_">3</option>
@@ -100,36 +99,36 @@ STED improves microscope resolution at the expense of speed and gentleness</h4>
     <option value="27p00dep_">27</option>
   </select></td><td>(peak fluence per depletion pulse, in saturation units)</td>
   </tr><tr>
-  <td>Excitation: </td><td><select id="Figure 1 excitation" onchange="update_figure_1()">
+  <td>Excitation: </td><td><select id="Figure_1_excitation" onchange="update_figure_1()">
     <option value="0p25exc_">0.25</option>
     <option value="1p00exc_" selected="selected">1</option>
     <option value="4p00exc_">4</option>
   </select></td><td>(peak fluence per excitation pulse, in saturation units)</td>
   </tr><tr>
-  <td>Scan density:</td><td><select id="Figure 1 samples" onchange="update_figure_1()">
+  <td>Scan density:</td><td><select id="Figure_1_samples" onchange="update_figure_1()">
     <option value="004samps_">4</option>
     <option value="006samps_">6</option>
     <option value="008samps_" selected="selected">8</option>
     <option value="012samps_">12</option>
   </select></td><td>(scan positions per excitation PSF FWHM)</td>
   </tr><tr>
-  <td>Exposure time:</td><td><select id="Figure 1 pulses" onchange="update_figure_1()">
+  <td>Exposure time:</td><td><select id="Figure_1_pulses" onchange="update_figure_1()">
     <option value="001pulses" selected="selected">1</option>
     <option value="002pulses">2</option>
     <option value="004pulses">4</option>
     <option value="008pulses">8</option>
   </select></td><td>(excitation/depletion pulse pairs per scan position)</td>
   </tr><tr>
-  <td>Shape:</td><td><select id="Figure 1 shape" onchange="update_figure_1()">
+  <td>Shape:</td><td><select id="Figure_1_shape" onchange="update_figure_1()">
     <option value="point_" selected="selected">Point</option>
     <option value="line_">Line</option>
   </select></td><td>(2D point-scan, or 1D line-scan)</td>
   </tr>
 </table>
-<figcaption><strong>Figure 1: Interactive comparison between point-STED and line-STED.</strong> See <a href="./appendix.html#Assumptions"">Appendix</a> for simulation details. <strong>(a)</strong> Fluence per excitation (dotted blue) and depletion (green) pulse vs. scan position, in <a href="./appendix.html#Units">saturation units</a>. <strong>(b)</strong> Probability per pulse of depletion (green) and excitation before (dotted blue) and after (solid blue) depletion, vs. scan position. Gray lines (top) and black dots (bottom) show scan positions in (a) and (b). <strong>(c)</strong> Fourier transform of the excitation shown in the top panel of (b), before (dotted blue) and after (solid blue) depletion, normalized to the expected number of emissions per molecule in one imaging scan. Red lines show the Nyquist limit. <strong>(d)</strong> Cumulative fluence delivered per imaging scan, in <a href="./appendix.html#Units">saturation units</a>. <strong>(e)</strong> Emissions per molecule per imaging scan, and STED resolution improvement compared to the diffraction limit.</figcaption>
-</figure></p>
+<figcaption><strong>Figure 1: Interactive comparison between point-STED and line-STED.</strong> See <a href="./appendix.html#Assumptions">Appendix</a> for simulation details. <strong>(a)</strong> Fluence per excitation (dotted blue) and depletion (green) pulse vs. scan position, in <a href="./appendix.html#Units">saturation units</a>. <strong>(b)</strong> Probability per pulse of depletion (green) and excitation before (dotted blue) and after (solid blue) depletion, vs. scan position. Gray lines (top) and black dots (bottom) show scan positions in (a) and (b). <strong>(c)</strong> Fourier transform of the excitation shown in the top panel of (b), before (dotted blue) and after (solid blue) depletion, normalized to the expected number of emissions per molecule in one imaging scan. Red lines show the Nyquist limit. <strong>(d)</strong> Cumulative fluence delivered per imaging scan, in <a href="./appendix.html#Units">saturation units</a>. <strong>(e)</strong> Emissions per molecule per imaging scan, and STED resolution improvement compared to the diffraction limit.</figcaption>
+</figure><p></p>
 <p>
- Together, these factors mean STED requires a massive illumination dose and slowly yields a small signal compared to standard confocal, even for moderate \(R\), even when <a href="./appendix.html#Tuning STED">optimally tuned</a>. This makes STED an appealing improvement to confocal microscopy in some cases, but not a general-purpose replacement. Can we do better?
+ Together, these factors mean STED requires a massive illumination dose and slowly yields a small signal compared to standard confocal, even for moderate \(R\), even when <a href="./appendix.html#Tuning_STED">optimally tuned</a>. This makes STED an appealing improvement to confocal microscopy in some cases, but not a general-purpose replacement. Can we do better?
 </p><p>
  Instead of a <a href="./appendix.html#Pastries">doughnut</a>, what if we try an <a href="./appendix.html#Pastries">eclair</a>? Stretching our excitation and depletion patterns into lines
 
@@ -144,9 +143,9 @@ Results</h3>
 <h4>
 Line-scanning STED is gentler than point-scanning STED</h4>
 <p>
- A gentler technique gives <a href="./appendix.html#Comparing gentleness">higher image quality for the same photodose</a>. Unfortunately, the simplest comparison (changing Figure 1 from <code>Shape: Point</code> to <code>Shape: Line</code>) isn't fair or conclusive; line-STED decreases excitation and depletion dose compared to point-STED, but also reduces emissions per molecule and badly degrades resolution perpendicular to the scan direction.
+ A gentler technique gives <a href="./appendix.html#Comparing_gentleness">higher image quality for the same photodose</a>. Unfortunately, the simplest comparison (changing Figure 1 from <code>Shape: Point</code> to <code>Shape: Line</code>) isn't fair or conclusive; line-STED decreases excitation and depletion dose compared to point-STED, but also reduces emissions per molecule and badly degrades resolution perpendicular to the scan direction.
 </p><p>
- How can we compare fairly? By <a href="./appendix.html#Figure 2 parameters">appropriate tuning</a>, we can compare line vs. point STED at <a href="./appendix.html#Comparing photodose">equal photodose</a>. To compare <a href="appendix.html#Comparing image quality">image quality</a>, we simulate a standard method to handle anisotropic resolution: acquire images from multiple scan directions
+ How can we compare fairly? By <a href="./appendix.html#Figure_2_parameters">appropriate tuning</a>, we can compare line vs. point STED at <a href="./appendix.html#Comparing_photodose">equal photodose</a>. To compare <a href="appendix.html#Comparing_image_quality">image quality</a>, we simulate a standard method to handle anisotropic resolution: acquire images from multiple scan directions
 
 [<a class="citation" href="http://www.ub.uni-heidelberg.de/archiv/15986" title="Dissertation by Sebastian Schubert, supervised by Stefan Hell">Schubert 2013</a>,
 
@@ -155,14 +154,13 @@ Line-scanning STED is gentler than point-scanning STED</h4>
 and fuse these measurements into a single high-quality image via iterative deconvolution
 
 [<a class="citation" href="http://dx.doi.org/10.1002/cphc.201300831" title="Richardson–Lucy Deconvolution as a General Tool for Combining Images with Complementary Strengths; Maria Ingaramo, Andrew G. York, Eelco Hoogendoorn, Marten Postma, Hari Shroff, George H. Patterson; ChemPhysChem Volume 15, Issue 4, pages 794–800, March 17, 2014">Ingaramo 2014</a>]. 
-</p><p>
-<a name="Figure 2"></a>
-<figure>
-<img src="./images/figure_2/figure_2_lines_2p5x_ld.gif" alt="Figure 2" id="Figure 2 gif" width="720">
-<img src="./images/figure_2/figure_2_lines_2p5x_ld.svg" alt="Figure 2" id="Figure 2 svg" width="720">
+</p>
+<figure id="Figure_2">
+<img src="./images/figure_2/figure_2_lines_2p5x_ld.gif" alt="Figure 2" id="Figure_2_gif" width="720">
+<img src="./images/figure_2/figure_2_lines_2p5x_ld.svg" alt="Figure 2" id="Figure_2_svg" width="720">
 <table class="figure_controls">
   <tr>
-  <td>Point-STED resolution:</td><td><select id="Figure 2 resolution" onchange="update_figure_2()">
+  <td>Point-STED resolution:</td><td><select id="Figure_2_resolution" onchange="update_figure_2()">
     <option value="1p0x">1.00x</option>
     <option value="1p5x" >1.50x</option>
     <option value="2p0x" >2.00x</option>
@@ -171,25 +169,25 @@ and fuse these measurements into a single high-quality image via iterative decon
     <option value="4p0x" >4.00x</option>
   </select></td><td>(improvement compared to the diffraction limit)</td>
   </tr><tr>
-  <td>Image:</td><td><select id="Figure 2 image" onchange="update_figure_2()">
+  <td>Image:</td><td><select id="Figure_2_image" onchange="update_figure_2()">
     <option value="astronaut_">Astronaut</option>
     <option value="lines_" selected="selected">Lines</option>
     <option value="cat_">Michifus</option>
     <option value="rings_">Rings</option>
   </select></td><td>(choice of resolution targets)</td>
   </tr><tr>
-  <td>Line STED scan type:</td><td><select id="Figure 2 scan type" onchange="update_figure_2()">
+  <td>Line STED scan type:</td><td><select id="Figure_2_scan_type" onchange="update_figure_2()">
     <option value="_ld" selected="selected">Descanned</option>
     <option value="_lr">Rescanned</option>
   </select></td><td>(point STED is descanned)</td>
   </tr>
 </table>
-<figcaption><strong>Figure 2: Line STED gives higher image quality than point STED for the same photodose.</strong> See <a href="./appendix.html#Figure 2 parameters">Appendix</a> for simulation details. <strong>(a)</strong> Simulated point-STED image <strong>(b)</strong> Simulated line-STED image using <a href="./appendix.html#Comparing photodose">the same excitation and depletion dose</a> as (a). <strong>(c)</strong> Animated, overlaid comparison of (a) and (b). <strong>(d)</strong> <a href="./appendix.html#Comparing image quality">Reconstruction error vs. spatial frequency</a> for (a) (point STED, left panel) and (b) (line STED, right panel); darker pixels indicate lower error. Values along the lines drawn in (d) are plotted in <strong>(e)</strong>. Green line in (d) and (e) shows point STED reconstruction error vs. spatial frequency, blue lines show line-STED reconstruction error vs. spatial frequency along a worst-case direction (dotted blue), and a best-case direction (solid blue). <strong>(f)</strong> Point-STED PSF used for simulated imaging and deconvolution in (a). <strong>(g)</strong> Line-STED PSF(s) used for simulated imaging and deconvolution-based image fusion in (b), one for each scan direction.</figcaption>
-</figure></p>
+<figcaption><strong>Figure 2: Line STED gives higher image quality than point STED for the same photodose.</strong> See <a href="./appendix.html#Figure_2_parameters">Appendix</a> for simulation details. <strong>(a)</strong> Simulated point-STED image <strong>(b)</strong> Simulated line-STED image using <a href="./appendix.html#Comparing_photodose">the same excitation and depletion dose</a> as (a). <strong>(c)</strong> Animated, overlaid comparison of (a) and (b). <strong>(d)</strong> <a href="./appendix.html#Comparing_image_quality">Reconstruction error vs. spatial frequency</a> for (a) (point STED, left panel) and (b) (line STED, right panel); darker pixels indicate lower error. Values along the lines drawn in (d) are plotted in <strong>(e)</strong>. Green line in (d) and (e) shows point STED reconstruction error vs. spatial frequency, blue lines show line-STED reconstruction error vs. spatial frequency along a worst-case direction (dotted blue), and a best-case direction (solid blue). <strong>(f)</strong> Point-STED PSF used for simulated imaging and deconvolution in (a). <strong>(g)</strong> Line-STED PSF(s) used for simulated imaging and deconvolution-based image fusion in (b), one for each scan direction.</figcaption>
+</figure><p></p>
 <p>
- This (<a href="./appendix.html#Figure 2 parameters">admittedly complex</a>) comparison confirms our suspicion: line-STED is gentler than point-STED. Qualitatively, a point-STED image (Figure 2a) is lower quality than a line-STED image using the same photodose (Figure 2b) for any choice of <code>Point-STED resolution</code>; an animated overlay (Figure 2c) emphasizes these qualitative differences. Quantitatively, line-STED images are more accurate than point-STED images, yielding a larger range of <a href="./appendix.html#Comparing image quality">spatial frequencies measured with low error</a> (Figure 2d), and similar or lower error levels at each of these frequencies (Figure 2e). 
+ This (<a href="./appendix.html#Figure_2_parameters">admittedly complex</a>) comparison confirms our suspicion: line-STED is gentler than point-STED. Qualitatively, a point-STED image (Figure 2a) is lower quality than a line-STED image using the same photodose (Figure 2b) for any choice of <code>Point-STED resolution</code>; an animated overlay (Figure 2c) emphasizes these qualitative differences. Quantitatively, line-STED images are more accurate than point-STED images, yielding a larger range of <a href="./appendix.html#Comparing_image_quality">spatial frequencies measured with low error</a> (Figure 2d), and similar or lower error levels at each of these frequencies (Figure 2e). 
 </p><p>
- Note that point-STED resolution is laterally isotropic, but multi-orientation-fusion line-STED resolution is not. The image of a pointlike object (called the <u>p</u>oint <u>s</u>pread <u>f</u>unction or PSF) is round for point-STED (Figure 2f), but elliptical with varying orientations for each line-STED scan direction (Figure 2g). This causes a star-shaped pattern in line-STED's error vs. spatial frequency (Figure 2d, right panel), meaning fine structures will be more visible at some orientations than others. In the worst-case directions (Figure 2d,e, dotted blue line), line-STED resolution is similar to point-STED with the same photodose, but in the best-case directions (Figure 2d,e, solid blue line), resolution is <a href="./appendix.html#Figure 2 parameters">approximately twice as good</a>. Selecting <code>Shape: Rings</code> in Figure 2 highlights this difference qualitatively (Figure 2c); even for the least favorable orientations, line-STED shows finer rings than point-STED.
+ Note that point-STED resolution is laterally isotropic, but multi-orientation-fusion line-STED resolution is not. The image of a pointlike object (called the <u>p</u>oint <u>s</u>pread <u>f</u>unction or PSF) is round for point-STED (Figure 2f), but elliptical with varying orientations for each line-STED scan direction (Figure 2g). This causes a star-shaped pattern in line-STED's error vs. spatial frequency (Figure 2d, right panel), meaning fine structures will be more visible at some orientations than others. In the worst-case directions (Figure 2d,e, dotted blue line), line-STED resolution is similar to point-STED with the same photodose, but in the best-case directions (Figure 2d,e, solid blue line), resolution is <a href="./appendix.html#Figure_2_parameters">approximately twice as good</a>. Selecting <code>Shape: Rings</code> in Figure 2 highlights this difference qualitatively (Figure 2c); even for the least favorable orientations, line-STED shows finer rings than point-STED.
 </p>
 <h4>
 Rescanned line-STED is faster than descan point-STED, multipoint-STED, and descan line-STED</h4>
@@ -211,47 +209,47 @@ or instant SIM
 [<a class="citation" href="http://dx.doi.org/10.1038/nmeth.2687" title="Instant super-resolution imaging in live cells and embryos via analog image processing; Andrew G York, Panagiotis Chandris, Damian Dalle Nogare, Jeffrey Head, Peter Wawrzusin, Robert S Fischer, Ajay Chitnis & Hari Shroff; Nature Methods 10, 1122–1126 (2013)">York 2013</a>];
 
 attentive readers will notice that the curves in Figure 1f and 1g start at \(R=1.41\) for rescanned line-STED, since rescanning gives the same resolution advantage as structured illumination microscopy even with no depletion beam.
-</p><p>
+</p>
 <figure>
-<video width="100%" controls autoplay loop muted alt="Figure 3" id="Figure 3 vid"
+<video width="100%" controls autoplay loop muted id="Figure_3_vid"
  poster="./images/figure_3/descan_point_000deg_lines_1x1FOV_3p00xR_000000.svg">
  <source src="./images/figure_3/descan_point_lines_1x1FOV_3p00xR.mp4" type="video/mp4">
  Your browser doesn't support HTML5 MP4 video.
 </video>
 <table class="figure_controls">
   <tr>
-  <td>Imaging method:</td><td><select id="Figure 3 imaging method" onchange="update_figure_3()">
+  <td>Imaging method:</td><td><select id="Figure_3_imaging_method" onchange="update_figure_3()">
     <option value="descan_point_" selected="selected" >Descan point</option>
     <option value="nondescan_multipoint_">Multipoint</option>
     <option value="descan_line_">Descan line</option>
     <option value="rescan_line_">Rescan line</option>
   </select></td><td>(STED)</td>
   </tr><tr>
-  <td>STED resolution:</td><td><select id="Figure 3 resolution" onchange="update_figure_3()">
+  <td>STED resolution:</td><td><select id="Figure_3_resolution" onchange="update_figure_3()">
     <option value="1p00xR">1.00</option>
     <option value="2p00xR">2.00</option>
     <option value="3p00xR" selected="selected" >3.00</option>
   </select></td><td>(compared to the diffraction limit)</td>
   </tr><tr>
-  <td>Test image:</td><td><select id="Figure 3 test image" onchange="update_figure_3()">
+  <td>Test image:</td><td><select id="Figure_3_test_image" onchange="update_figure_3()">
     <option value="lines_" selected="selected" >Lines</option>
     <option value="rings_">Rings</option>
   </select></td><td></td>
   </tr><tr>
-  <td>Field of view:</td><td><select id="Figure 3 field of view" onchange="update_figure_3()">
+  <td>Field of view:</td><td><select id="Figure_3_field_of_view" onchange="update_figure_3()">
     <option value="1x1FOV_" selected="selected" >1 by 1</option>
     <option value="2x2FOV_">2 by 2</option>
   </select></td><td></td>
   </tr><tr>
-  <td>Orientations:</td><td><select id="Figure 3 number of angles" onchange="update_figure_3()">
+  <td>Orientations:</td><td><select id="Figure_3_number_of_angles" onchange="update_figure_3()">
     <option value="02angles_" selected="selected" >2</option>
-    <option value="04angles_" selected="selected">4</option>
+    <option value="04angles_">4</option>
     <option value="06angles_">6</option>
   </select></td><td></td>
   </tr>
 </table>
 <figcaption><strong>Figure 3: Blah blah</strong> See <a href="./appendix.html#Assumptions">Appendix</a> for simulation details. <strong>(a)</strong> Blah blah</figcaption>
-</figure></p>
+</figure><p></p>
 <p>
 BELOW THIS LINE IS STILL GARBAGE
 </p>
