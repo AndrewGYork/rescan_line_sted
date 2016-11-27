@@ -1,19 +1,30 @@
+#!/usr/bin/env python3
+# Dependencies from the Python 3 standard library:
 import os
 import pickle
 import shutil
 from subprocess import call
+# Dependencies from the Scipy stack https://www.scipy.org/stackspec.html :
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.ndimage import interpolation, map_coordinates, gaussian_filter
+# Dependencies from https://github.com/AndrewGYork/rescan_line_sted :
 import np_tif
 import line_sted_tools as st
 """
+Run this script in a Python 3 interpreter to produce the images for Figure 2.
+
+The purpose of Figure 2
+-----------------------
 Line STED is much gentler than point STED, but has very anisotropic
-resolution. To give isotropic resolution and comparable image quality to
+resolution. To give isotropic resolution and compare fairly to
 point-STED, line-STED needs to fuse multiple images taken with different
-scan directions. This module compares simulations of several operating
-points to illustrate that for the same light dose, fusion of multiple
-line scan directions gives higher image quality than point-STED.
+scan directions.
+
+This module compares simulations of several operating points to
+illustrate that for the same light dose, fusion of multiple line scan
+directions gives higher image quality than point-STED. This seems to be
+a general conclusion; as far as I can tell, line-STED is always better.
 """
 def main():
     output_prefix = os.path.abspath(os.path.join(
@@ -53,8 +64,7 @@ def main():
 
 
 def calculate_psfs(output_prefix):
-    """
-    Tune a family of comparable line-STED vs. point-STED psfs.
+    """Tune a family of comparable line-STED vs. point-STED psfs.
     """
     comparison_filename = os.path.join(output_prefix, 'psf_comparisons.pkl')
     if os.path.exists(comparison_filename):
@@ -62,6 +72,8 @@ def calculate_psfs(output_prefix):
         comparisons = pickle.load(open(comparison_filename, 'rb'))
     else:
         comparisons = {}
+        # Yes, I really did tune all the parameters below by hand so the
+        # comparisons came out perfectly. Ugh.
         comparisons['1p0x_ld'] = psf_comparison_pair(
             point_resolution_improvement=0.99, #Juuust under 1, ensures no STED
             line_resolution_improvement=0.99,
@@ -69,7 +81,7 @@ def calculate_psfs(output_prefix):
             line_emissions_per_molecule=4,
             line_scan_type='descanned',
             line_num_orientations=1,
-            max_excitation_brightness=0.01) # Without STED, no point saturating
+            max_excitation_brightness=0.01) # Without STED, no reason to saturate
         comparisons['1p0x_lr'] = psf_comparison_pair(
             point_resolution_improvement=0.99, #Juuust under 1, ensures no STED
             line_resolution_improvement=1.38282445,
@@ -77,7 +89,7 @@ def calculate_psfs(output_prefix):
             line_emissions_per_molecule=4,
             line_scan_type='rescanned',
             line_num_orientations=2,
-            max_excitation_brightness=0.01) # Without STED, no point saturating
+            max_excitation_brightness=0.01) # Without STED, no reason to saturate
         comparisons['1p5x_ld'] = psf_comparison_pair(
             point_resolution_improvement=1.5,
             line_resolution_improvement=2.68125,

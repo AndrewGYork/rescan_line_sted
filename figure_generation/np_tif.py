@@ -1,8 +1,15 @@
-# This isn't the 'real' version of np_tif! It's just here for the record.
-# The 'real', up-to-date version is here: 
-# https://github.com/AndrewGYork/tools/blob/master/np_tif.py
+#!/usr/bin/env python3
 import numpy as np
+"""
+Don't run this script directly, it won't do much. This module is a
+dependency of line_sted_figure_1.py, line_sted_figure_2.py, and
+line_sted_figure_3.py.
 
+This isn't the 'real' version of np_tif.py! It's just here for the record.
+
+The 'real', up-to-date version is here: 
+https://github.com/AndrewGYork/tools/blob/master/np_tif.py
+"""
 def tif_to_array(
     filename,
     image_descriptions=False,

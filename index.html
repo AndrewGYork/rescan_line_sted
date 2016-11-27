@@ -51,6 +51,8 @@ The real text begins here.
 <p class="author_affiliations"><sup>1</sup>Calico Life Sciences LLC, South San Francisco, CA 94080, USA</p>
 <p class="contact_email"><sup>*</sup>Institutional email: <a href="mailto:agy+linerescan@calicolabs.com" target="_self">agy+linerescan@calicolabs.com</a></p>
 
+<h4>
+Abstract</h4>
 <p class="abstract">
 <u>St</u>imulated <u>e</u>mission <u>d</u>epletion (STED) 
 
@@ -73,7 +75,9 @@ and multi-image fusion
 [<a class="citation" href="http://dx.doi.org/10.1002/cphc.201300831" title="Richardson–Lucy Deconvolution as a General Tool for Combining Images with Complementary Strengths; Maria Ingaramo, Andrew G. York, Eelco Hoogendoorn, Marten Postma, Hari Shroff, George H. Patterson; ChemPhysChem Volume 15, Issue 4, pages 794–800, March 17, 2014">Ingaramo 2014</a>].
 </p>
 
-<p class="abstract">Intended audience: Engineers and physicists familiar with modern microscopy techniques, including stimulated emission depletion and structured illumination. Instead of equations, we include the complete Python code which generates each figure, to facilitate reproducing and exploring our results.
+<h4>
+Intended audience</h4>
+<p class="abstract">Engineers and physicists familiar with modern microscopy techniques, including stimulated emission depletion and structured illumination. Instead of equations, we include the complete Python code which generates each figure, to facilitate reproducing and exploring our results.
 </p>
 
 <h3>
@@ -88,12 +92,6 @@ STED improves microscope resolution at the expense of speed and gentleness</h4>
 <img src="./images/figure_1/point_1p00exc_9p00dep_008samps_001pulses.svg" alt="Figure 1" id="Figure 1 image">
 <table class="figure_controls">
   <tr>
-  <td>Excitation: </td><td><select id="Figure 1 excitation" onchange="update_figure_1()">
-    <option value="0p25exc_">0.25</option>
-    <option value="1p00exc_" selected="selected">1</option>
-    <option value="4p00exc_">4</option>
-  </select></td><td>(peak fluence per excitation pulse, in saturation units)</td>
-  </tr><tr>
   <td>Depletion:</td><td><select id="Figure 1 depletion" onchange="update_figure_1()">
     <option value="0p00dep_">0</option>
     <option value="1p00dep_">1</option>
@@ -101,6 +99,12 @@ STED improves microscope resolution at the expense of speed and gentleness</h4>
     <option value="9p00dep_" selected="selected">9</option>
     <option value="27p00dep_">27</option>
   </select></td><td>(peak fluence per depletion pulse, in saturation units)</td>
+  </tr><tr>
+  <td>Excitation: </td><td><select id="Figure 1 excitation" onchange="update_figure_1()">
+    <option value="0p25exc_">0.25</option>
+    <option value="1p00exc_" selected="selected">1</option>
+    <option value="4p00exc_">4</option>
+  </select></td><td>(peak fluence per excitation pulse, in saturation units)</td>
   </tr><tr>
   <td>Scan density:</td><td><select id="Figure 1 samples" onchange="update_figure_1()">
     <option value="004samps_">4</option>

@@ -1,14 +1,21 @@
+#!/usr/bin/env python3
+# Dependencies from the Python 3 standard library:
 import os
 import time
+# Dependencies from the Scipy stack https://www.scipy.org/stackspec.html :
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.ndimage import gaussian_filter, interpolation
 from scipy.optimize import curve_fit, minimize_scalar
 from scipy.signal import fftconvolve
+# Dependencies from https://github.com/AndrewGYork/rescan_line_sted :
 import np_tif
-
 """
-STED microscopy, descanned point vs rescanned line comparison.
+Tools for comparison of descanned point STED microscopy vs rescanned
+line STED microscopy.
+
+Don't run this script directly, it won't do anything. This module is a
+dependency of line_sted_figure_1.py and line_sted_figure_2.py.
 
 Assumptions:
  . 2D simulation
@@ -65,8 +72,6 @@ Outputs:
  . Excitation dose summed over the scan, in saturation units.
  . Depletion dose summed over the scan, in saturation units.
 """
-
-#Utility functions
 def psf_report(
     psf_type, #Point or line
     excitation_brightness, #Peak brightness in saturation units
@@ -78,7 +83,7 @@ def psf_report(
     ):
     """
     The primary function of this module. See the start of this file for
-    a lengthy description.
+    a lengthy list of simulation assumptions.
     """
     # Excitation PSF width (FWHM) defines our length unit, and we've
     # chosen how many steps (pixels) we want per excitation PSF. What

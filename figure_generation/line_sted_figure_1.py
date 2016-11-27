@@ -1,8 +1,34 @@
+#!/usr/bin/env python3
+# Dependencies from the Python 3 standard library:
 import os
+# Dependencies from the Scipy stack https://www.scipy.org/stackspec.html :
 import numpy as np
 import matplotlib.pyplot as plt
+# Dependencies from https://github.com/AndrewGYork/rescan_line_sted :
 from line_sted_tools import psf_report
+"""
+Run this script in a Python 3 interpreter to produce the images for Figure 1.
 
+The purpose of Figure 1
+------------------------
+I want to compare line STED vs. point STED, but there are many choices
+to make when acquiring STED data, including:
+ . Depletion intensity,
+ . Excitation intensity
+ . Scan step size
+ . Dwell time.
+
+This module simulates many combinations of these choices, to let the
+reader explore how good (or bad) parameter choices affect outcomes like:
+ . Diffraction-limited resolution
+ . Nyquist-limited resolution
+ . Signal
+ . Light dose
+
+Only after we understand how to make optimal tuning choices (this
+figure) can we meaningfully compare point STED vs. line STED (next
+figure).
+"""
 def main():
     psf_types = ['line', 'point']
     excitation_brightnesses = [0.25, 1, 4]

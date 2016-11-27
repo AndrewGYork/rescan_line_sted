@@ -1,17 +1,36 @@
+#!/usr/bin/env python3
+# Dependencies from the Python 3 standard library:
 import os
 import shutil
 import warnings
 from subprocess import check_call
+# Dependencies from the Scipy stack https://www.scipy.org/stackspec.html :
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.ndimage import gaussian_filter, interpolation
+# Dependencies from https://github.com/AndrewGYork/rescan_line_sted :
 import np_tif
-
 """
-Illustrate how rescan line STED greatly improves STED imaging speed by
-paralellization without an excessive number of camera exposures, and
-also slightly improves image resolution by combining information from
-the excitation and emission PSFs.
+Run this script in a Python 3 interpreter to produce the images for Figure 3.
+
+The purpose of Figure 3
+-----------------------
+To demonstrate that rescan line STED is faster than other STED methods,
+either because it needs fewer excitation/depletion pulse pairs (giving
+way more light per second compared to single-point STED) or because it
+needs fewer intensity measurements (using far fewer camera exposures and
+camera pixel measurements compared to descan line STED or multipoint
+STED).
+
+Rescan line STED also improves resolution compared to these other
+methods, but in my opinion this is a less important effect, so  I don't
+emphasize that point here.
+
+This module produces animations which compare the number of scan
+positions and number of camera exposures of rescan line STED vs. three
+other approaches (descan point STED, multipoint STED, and descan line
+STED), for several combinations of resolution improvement and
+field-of-view.
 """
 def main():
     output_prefix = os.path.abspath(os.path.join(
@@ -67,18 +86,10 @@ def simulate_imaging(
     """Simulate a variety of STED imaging techniques.
 
     This is a big, hairy function, but it's reasonably well debugged.
-    The point of the resulting figure(s) is to demonstrate that rescan
-    line STED is faster than all the other STED methods, either because
-    it needs fewer excitation/depletion pulse pairs (giving way more
-    light per second compared to single-point STED) or because it needs
-    fewer intensity measurements (using far fewer camera exposures
-    compared to descan line STED or multipoint STED). Rescan line STED
-    also improves resolution compared to these other methods, but in my
-    opinion this is a less important effect, so I don't emphasize that
-    point here. Note that I approximate the STED excitation as a
-    Gaussian in this script; this is an accurate approximation,
-    especially since I'm not going to make any quantitative claims about
-    resolution with this figure.
+    Note that I approximate the STED excitation as a Gaussian in this
+    script; this is a reasonably accurate approximation, especially
+    since I'm not going to make any quantitative claims about resolution
+    with this figure.
     """
     output_filename = imaging_type + '_'
     if num_orientations > 1: output_filename += '%02iangles_'%num_orientations
