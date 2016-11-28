@@ -66,7 +66,7 @@ Simulations in this article assume the following:
 
 <h3 id="Units">
 Units</h3>
-<ul><li> Distance is measured in excitation PSF widths. Excitation PSF full-width at half-maximum is 1 unit wide, by definition.
+<ul><li> Distance is measured in excitation PSF widths. Excitation PSF full-width at half-maximum is 1 unit wide, by definition. Note that pixels are not (generally) 1 unit wide.
 </li><li> Excitation fluence is measured in saturation units. An excitation pulse fluence of \(F\) is expected to excite a fraction \(1 - 2^{-F}\) of the ground-state fluorophores it illuminates.
 </li><li> Depletion fluence is also measured in saturation units. A depletion pulse fluence of \(F\) is expected to deplete a fraction \(1 - 2^{-F}\) of excited fluorophores it illuminates.
 </li><li> Time is measured in number of excitation/depletion pulse pairs, since signal emission is probably the relevant speed limit, and pulses are spaced by at least the fluorescent lifetime. Neither mechanical scanning nor available illumination intensity are likely to (insurmountably) limit speed. Data rates (photoelectrons, pixels and bytes per second from the detector) are potentially a practical speed limit, and worth considering, but probably favor rescan line STED (multipixel detectors) over descanned point STED (single-pixel detectors).
@@ -138,9 +138,9 @@ Comparing image quality</h4>
 <h3 id=Figure_2_parameters>
 Figure 2 simulation parameters</h3>
 <p>
- As discussed above, <a href="appendix.html#Tuning_STED">a correctly tuned STED microscope</a> doesn't have as many degrees of freedom as Figure 1 suggests. In <a href="index.html#Figure_2">Figure 2</a>, rather than choose <code>Excitation</code>, <code>Depletion</code>, <code>Scan Density</code>, and <code>Exposure time</code> independently, we instead choose a desired resolution improvement and signal level for descan point-STED, and my code solves for the inputs which will give this output. To avoid excessive excitation dose or depletion dose, we minimize <code>Exposure time</code> subject to the constraint that <code>Excitation &lt; 0.25</code>.
+ As discussed above, <a href="appendix.html#Tuning_STED" target="_self">a correctly tuned STED microscope</a> doesn't have as many degrees of freedom as Figure 1 suggests. In <a href="index.html#Figure_2">Figure 2</a>, rather than choose <code>Excitation</code>, <code>Depletion</code>, <code>Scan Density</code>, and <code>Exposure time</code> independently, we instead choose a desired resolution improvement and signal level for descan point-STED, and my code solves for the inputs which will give this output. To avoid excessive excitation dose or depletion dose, we minimize <code>Exposure time</code> subject to the constraint that <code>Excitation &lt; 0.25</code>.
 </p><p>
- After parameters are chosen for point-STED, I choose resolution improvement and signal level for descan and rescan line-STED that will give <a href="./appendix.html#Comparing_photodose">the same excitation and depletion dose</a> as point-STED, and my code solves for the inputs which will give this output, subject to the same minimization of <code>Exposure time</code> and constraint that <code>Excitation &lt; 0.25</code>. For each comparison, I choose the number of line-STED orientations to give <a href="./appendix.html#Comparing_image_quality">strictly better image quality</a> than point-STED; this number increases with increased resolution.
+ After parameters are chosen for point-STED, I choose resolution improvement and signal level for descan and rescan line-STED that will give <a href="./appendix.html#Comparing_photodose" target="_self">the same excitation and depletion dose</a> as point-STED, and my code solves for the inputs which will give this output, subject to the same minimization of <code>Exposure time</code> and constraint that <code>Excitation &lt; 0.25</code>. For each comparison, I choose the number of line-STED orientations to give <a href="./appendix.html#Comparing_image_quality" target="_self">strictly better image quality</a> than point-STED; this number increases with increased resolution.
 </p><p>
  Note that we could use fewer orientations to increase acquisition speed and reduce depletion dose at the expense of "strictly better" image quality (some directions would have worse resolution than point STED, some would have better). In my experience, many real-life imaging challenges tolerate substantial resolution anisotropy. Here, my goal is the cleanest comparison of gentleness between point-STED and line-STED, so I stick to comparisons which are well-ordered.
 </p><p>
@@ -200,32 +200,34 @@ table, th, td {
 Speed limits in microscopy</h3>
 <p>
 I need to establish that speed can be boiled down to two numbers: number of camera exposures, and number of scan positions. This is complicated, because it's not quite so simple.
-</p>
+</p><p>
 Speed considerations:
+</p>
+<ul><li>Emitted photons per second (size of the glowing region)
 
- Photons per second
+</li><li> Intensity measurements per second
 
- Intensity measurements per second
+</li><li> Scan positions per second
 
- Scan positions per second
+</li><li> Laser pulses per second
 
- Laser pulses per second
+</li><li> Other overhead (non-fundamental but common)
 
- Other overhead (non-fundamental but common)
+</li><li> Non-poisson noise per intensity measurement. (Since this reduces SNR, it effectively reduces photons per second)
 
- Non-poisson noise per intensity measurement. (Since this reduces SNR, it effectively reduces photons per second)
+</li><li>How does speed scale with field of view?
 
-How does speed scale with field of view?
+</li><li>How does laser brightness scale with field of view?
+</li></ul>
 
-How does laser brightness scale with field of view?
+<ul><li>Descanned single-point STED is fundamentally limited by photons per second.
 
-Descanned single-point STED is fundamentally limited by photons per second.
+</li><li>Scanned multi-point STED is currently limited by intensity measurements per second, and frames per second. It also suffers from increased read noise.
 
-Scanned multi-point STED is currently limited by intensity measurements per second, and frames per second. It also suffers from increased read noise.
+</li><li>Descanned line-STED is currently limited by intensity measurements per second, and frames per second. It also suffers from increased read noise, and is further limited by K-mirror rotation speed.
 
-Descanned line-STED is currently limited by intensity measurements per second, and frames per second. It also suffers from increased read noise, and is further limited by K-mirror rotation speed.
-
-Rescanned line-STED 
+</li><li>Rescanned line-STED ...
+</li></ul>
 
 
 
@@ -258,7 +260,7 @@ Code: <code>line_sted_tools.py</code></h3>
 <p>
  The <code>line_sted_tools.py</code> module defines the functions used to produce the data for Figures 1 and 2. You can view the full module in the <a href="https://github.com/AndrewGYork/rescan_line_sted/tree/master/figure_generation/line_sted_tools.py"><code>rescan_line_sted</code> Github respository</a>. For simplicity and readability, I've included simplified annotated versions of the most important functions here.
 </p>
-<h4>
+<h4 id="psf_report()">
 Function: <code>psf_report()</code></h4>
 <pre><code class="language-python">def psf_report(
     psf_type, #Point or line
@@ -267,12 +269,12 @@ Function: <code>psf_report()</code></h4>
     steps_per_excitation_psf_width, #Too small? Bad res. Too big? Excess dose.
     pulses_per_position): #Think of this as "dwell time"
 </code></pre><p>
-The primary function of this module. See the start of this Appendix for a lengthy list of <a href="./appendix.html#Assumptions">assumptions</a> made by this simulation, and a description of the <a href="./appendix.html#Units">units</a> used. Briefly, <code>psf_report()</code> takes inputs that correspond to the controls of <a href="./index.html#Figure_1">Figure 1</a>, and returns the data used to generate Figure 1.
+The primary function of this module. See the start of this Appendix for a lengthy list of <a href="./appendix.html#Assumptions" target="_self">assumptions</a> made by this simulation, and a description of the <a href="./appendix.html#Units" target="_self">units</a> used. Briefly, <code>psf_report()</code> takes inputs that correspond to the controls of <a href="./index.html#Figure_1">Figure 1</a>, and returns the data used to generate Figure 1.
 </p>
 <pre><code class="language-python"
 >    psfs = generate_psfs(excitation_brightness, depletion_brightness, psf_type)
 </code></pre><p>
-We start with a call to <code>generate_psfs()</code> to calculate excitation and STED PSFs, which we'll use to plot Figure 1(a, b, c).
+We start with a call to <a href="./appendix.html#generate_psfs()" target="_self"><code>generate_psfs()</code></a> to calculate excitation and STED PSFs, which we'll use to plot Figure 1(a, b, c).
 </p>
 <pre><code class="language-python"
 >    central_line_st = psfs['sted'][0, num_steps//2, :]
@@ -290,22 +292,20 @@ We calculate the widths of these PSFs via Gaussian fits to calculate the resolut
         depletion_dose = pulses_per_position * psfs['depletion'].sum()
         expected_emissions = pulses_per_position * psfs['sted'].sum()
     elif psf_type == 'line': #1D scan, sum a line
-        excitation_dose = (pulses_per_position * psfs['excitation'][0, num_steps//2, :].sum())
-        depletion_dose = (pulses_per_position * psfs['depletion'][0, num_steps//2, :].sum())
-        expected_emissions = (pulses_per_position * psfs['sted'][0, num_steps//2, :].sum())
+        excitation_dose = pulses_per_position * psfs['excitation'][0, num_steps//2, :].sum()
+        depletion_dose = pulses_per_position * psfs['depletion'][0, num_steps//2, :].sum()
+        expected_emissions = pulses_per_position * psfs['sted'][0, num_steps//2, :].sum()
 </code></pre><p>
-We also calculate emission levels and dose per pulse for Figure 1(d, e) from the excitation and depletion PSFs. Note that the scan pattern is <em>very</em> important when calculating the illumnation dose! Point-sted requires a 2D raster, compared to line STED which only needs a 1D scan. This leads to a huge difference in dose, and a small difference in emission levels.
+We also calculate emission levels and dose per pulse for Figure 1(d, e) from the excitation and depletion PSFs. Note that the scan pattern is <em>very</em> important when calculating the illumination dose! Point-STED requires a 2D raster, compared to line-STED which only needs a 1D scan. This leads to a huge difference in dose, and a small difference in emission levels.
 </p>
 
-<h4>
+<h4 id="generate_psfs()">
 Function: <code>generate_psfs()</code></h4>
 <pre><code class="language-python"
 >def generate_psfs(
-    shape, #Desired pixel dimensions of the psfs
     excitation_brightness, #Peak brightness in saturation units
     depletion_brightness, #Peak brightness in saturation units
-    blur_sigma,
-    psf_type='point'):
+    psf_type='point'): #Point or line
 </code></pre><p>
 The real workhorse of the module, a utility function used by <code>psf_report()</code>.
 </p>
@@ -315,7 +315,7 @@ The real workhorse of the module, a utility function used by <code>psf_report()<
     excitation_psf_point = gaussian_filter(excitation_psf_point, sigma=blur_sigma)
     excitation_psf_point *= excitation_brightness / excitation_psf_point.max()
 </code></pre><p>
-We calculate a point illumination pattern (Figure 1a, blue) by Gaussian blurring a single nonzero pixel; similar code calculates a Gaussian line pattern by blurring a single-pixel line. Pixel values encode fluence per pulse, in <a href="./appendix.html#Units">saturation units</a>.
+We start with an array of zeros, set the central pixel to one, and apply a Gaussian blur to calculate a point illumination pattern (Figure 1a, blue); similar code (not shown here) calculates a Gaussian line pattern by blurring a single-pixel line. Pixel values encode fluence per pulse, in <a href="./appendix.html#Units" target="_self">saturation units</a>, and the pixel size encodes the scan step size (always one pixel per step).
 </p>
 <pre><code class="language-python"
 >    depletion_psf_inner = np.zeros(shape)
@@ -326,7 +326,7 @@ We calculate a point illumination pattern (Figure 1a, blue) by Gaussian blurring
                            (depletion_psf_inner / depletion_psf_inner.max()))
     depletion_psf_point *= depletion_brightness  / depletion_psf_point.max()
 </code></pre><p>
-We calculate a point depletion pattern by (Figure 1a, green) difference of gaussian points; similar code calculates a line depletion pattern. As before, pixel values encode fluence per pulse, in <a href="./appendix.html#Units">saturation units</a>.
+We calculate a point depletion pattern (Figure 1a, green) as the difference of two gaussian blurs of points; similar code (not shown) calculates a line depletion pattern. As before, pixel values encode fluence per pulse, in <a href="./appendix.html#Units" target="_self">saturation units</a>.
 </p>
 <pre><code class="language-python"
 >    saturated_excitation_psf_point = 1 - 2**(-excitation_psf_point)
@@ -334,13 +334,15 @@ We calculate a point depletion pattern by (Figure 1a, green) difference of gauss
     sted_psf_point = saturated_excitation_psf_point * saturated_depletion_psf_point
 </code></pre><p>
 We use these fluences to calculate point-illumination transition probabilities; similar code calculates line-illumination probabilities. Pixel values encode probability per pulse that a ground-state molecule will become excited (Figure 1b, dotted blue), probability per pulse that an excited molecule will be depleted (Figure 1b, green), or probability per pulse that a molecule will become excited, but not be depleted (Figure 1b, solid blue).
-</p><p>
-Next we calculate the "system" PSF, which can depend on both excitation and emission. For descanned point-STED, the system PSF is the (STED-shrunk) excitation PSF. For rescanned line-STED, the system PSF also involves the emission PSF:
 </p>
 <pre><code class="language-python"
 >    if psf_type == 'point':
         descanned_point_sted_psf = sted_psf_point # Simple rename
-    elif psf_type == 'line':
+</code></pre><p>
+Next we calculate the "system" PSF, which can depend on both excitation and emission. For descanned point-STED, the system PSF is the (STED-shrunk) excitation PSF. For rescanned line-STED, the system PSF also involves the emission PSF:
+</p>
+<pre><code class="language-python"
+>    elif psf_type == 'line':
         line_rescan_ratio = int(np.round((emission_sigma / line_sted_sigma)**2 + 1)
         point_obj = np.zeros(shape)
         point_obj[0, point_obj.shape[1]//2, point_obj.shape[2]//2] = 1
@@ -356,7 +358,7 @@ I could use an analytical shortcut to calculate the rescan PSF (see
 
 [<a class="citation" href="http://dx.doi.org/10.1364/BOE.4.002644" title="Re-scan confocal microscopy: scanning twice for better resolution; Giulia M.R. De Luca, Ronald M.P. Breedijk, Rick A.J. Brandt, Christiaan H.C. Zeelenberg, Babette E. de Jong, Wendy Timmermans, Leila Nahidi Azar, Ron A. Hoebe, Sjoerd Stallinga, and Erik M.M. Manders; Biomedical Optics Express Vol. 4, Issue 11, pp. 2644-2656 (2013)">De Luca 2013</a>]
 
-for details), but for the sake of clarity, I explicitly simulate the rescan imaging process:
+for details), but for the sake of clarity, I explicitly simulate the rescan imaging process of a pointlike object:
 </p>
 <pre><code class="language-python"
 >        for scan_position in range(point_obj.shape[2]):
@@ -399,7 +401,7 @@ for details), but for the sake of clarity, I explicitly simulate the rescan imag
 </code></pre><p>
 For a graphical illustration of this simulation process, see the animations in <a href="./index.html#Figure_3">Figure 3</a> with <code>Imaging method: Rescan line</code>.</p>
 
-<h4>
+<h4 id="tune_psf()">
 Function: <code>tune_psf()</code></h4>
 <pre><code class="language-python"
 >def tune_psf(
@@ -410,38 +412,16 @@ Function: <code>tune_psf()</code></h4>
     max_excitation_brightness=0.5, #Saturation units
     steps_per_improved_psf_width=3):
 </code></pre><p>
-Find the combination of excitation brightness, depletion brightness,
-    and number of pulses to give the desired resolution improvement and
-    emissions per molecule, without exceeding a limit on excitation
-    brightness.
-
-    psf_report() lets us specify illumination intensities and scan step
-    sizes, and calculates resolution, emission, and dose. That's
-    conceptually great; these are the parameters we'd hand-tune when
-    using a STED microscope. Unfortunately, this also lets us make all
-    kinds of bad choices. For example, unless the step size matches the
-    resolution improvement, there's tons of excess dose for no gain. For
-    another example, you can always get more emission by increasing the
-    excitation intensity, but due to saturation, this is a terrible
-    approach
-
-    tune_psf() lets us specify our goals (resolution, emitted signal),
-    and figures out the inputs needed to get there.
-
-    This function is not fast or efficient, but that suits my needs, it
-    just has to generate a few figures.
-    """</p>
+A function which finds the combination of excitation brightness, depletion brightness, and number of pulses to give the desired resolution improvement and emissions per molecule, without exceeding a limit on excitation brightness.
+</p><p>
+<a href="./appendix.html#psf_report()" target="_self"><code>psf_report()</code></a> lets us specify illumination intensities and scan step sizes, and calculates resolution, emission, and dose. That's conceptually great; these are the parameters we'd hand-tune when using a STED microscope, as shown in <a href="./index.html#Figure_1">Figure 1</a>.
+</p><p>
+Unfortunately, <a href="./appendix.html#psf_report()" target="_self"><code>psf_report()</code></a> also lets us make all kinds of bad choices, <a href="./appendix.html#Tuning_STED" target="_self">as described above</a>. For example, unless the step size matches the resolution improvement, there's tons of excess dose for no benefit. For another example, you can always get more emission by increasing the excitation intensity, but due to saturation, this is a terrible approach.
+</p><p>
+<code>tune_psf()</code> lets us specify our goals (resolution improvement, emitted signal), and figures out the inputs needed to get there efficiently. Note that this function is not fast or memory-efficient, but that suits my needs, it just has to generate a few figures.
+</p>
 <pre><code class="language-python"
->    
-    assert (psf_type, scan_type) in (('point', 'descanned'),
-                                     ('line', 'descanned'),
-                                     ('line', 'rescanned'))
-    assert float(desired_resolution_improvement) == desired_resolution_improvement
-    assert float(desired_emissions_per_molecule) == desired_emissions_per_molecule
-    assert float(max_excitation_brightness) == max_excitation_brightness
-    assert float(steps_per_improved_psf_width) == steps_per_improved_psf_width
-    assert float(relative_error) == relative_error
-    steps_per_excitation_psf_width = (steps_per_improved_psf_width *
+>    steps_per_excitation_psf_width = (steps_per_improved_psf_width *
                                       desired_resolution_improvement)
     args = { #The inputs to psf_report()
         'psf_type': psf_type,
@@ -454,9 +434,6 @@ Find the combination of excitation brightness, depletion brightness,
     num_iterations = 0
     while True:
         num_iterations += 1
-        if num_iterations >= 10:
-            print("Max. iterations exceeded; giving up")
-            break
         # Tune the depletion brightness to get the desired resolution
         # improvement:
         def minimize_me(depletion_brightness):
@@ -465,8 +442,6 @@ Find the combination of excitation brightness, depletion brightness,
             return (results['resolution_improvement_' + scan_type] -
                     desired_resolution_improvement)**2
         args['depletion_brightness'] = abs(minimize_scalar(minimize_me).x)
-        if verbose_iterations:
-            print("Depletion brightness:", args['depletion_brightness'])
         # How many excitation/depletion pulse pairs do we need to
         # achieve the desired emission?
         args['excitation_brightness'] = max_excitation_brightness
@@ -474,8 +449,6 @@ Find the combination of excitation brightness, depletion brightness,
         results = psf_report(**args) # Calculate emission from one pulse
         args['pulses_per_position'] = np.ceil((desired_emissions_per_molecule /
                                                results['expected_emission']))
-        if verbose_iterations:
-            print(args['pulses_per_position'], "pulses.")
         # Tune the excitation brightness to get the desired emissions
         # per molecule:
         def minimize_me(excitation_brightness):
@@ -484,8 +457,6 @@ Find the combination of excitation brightness, depletion brightness,
             return (results['expected_emission'] -
                     desired_emissions_per_molecule)**2
         args['excitation_brightness'] = abs(minimize_scalar(minimize_me).x)
-        if verbose_iterations:
-            print("Excitation brightness:", args['excitation_brightness'])
         results = psf_report(**args)
         ## We already tuned the depletion brightness to get the desired
         ## resolution, but then we changed the excitation brightness,
@@ -498,24 +469,20 @@ Find the combination of excitation brightness, depletion brightness,
             desired_resolution_improvement)
         if (relative_resolution_error &lt; relative_error):
             break
-    if verbose_results:
-        print("PSF tuning complete, after", num_iterations, "iterations.")
-        print(" Inputs:")
-        for k in sorted(args.keys()):
-            print('  ', k, ': ', args[k], sep='')
-        print(" Outputs:")
-        for k in sorted(results.keys()):
-            if k == 'psfs':
-                print('  ', k, ': ', sorted(results[k].keys()), sep='')
-            else:
-                print('  ', k, ': ', results[k], sep='')
-        print()        
     results.update(args) #Combine the two dictionaries
     return results
+</code></pre><p>
+The workhorse of the optimization loop is <a href="https://docs.scipy.org/doc/scipy-0.18.1/reference/generated/scipy.optimize.minimize_scalar.html"><code>scipy.optimize.minimize_scalar()</code></a>, which alternates between tuning the depletion brightness to control resolution and tuning excitation brightness to control signal. Since depletion brightness also affects signal, and tuning excitation brightness (weakly) affects resoluion, we alternate tuning until our result is sufficiently close to our goal.
+</p>
 
-</code></pre>
 <h4>
-<code>Deconvolver()</code></h4>
+Class: <code>Deconvolver()</code></h4>
+<p>A relatively simple class, which implements Richardson-Lucy deconvolution for Figure 2. Since line-STED acquires images from multiple scan directions, and each image has highly anisotropic resolution, we need deconvolution to fuse these images into a single reconstruction
+
+[<a class="citation" href="http://dx.doi.org/10.1002/cphc.201300831" title="Richardson–Lucy Deconvolution as a General Tool for Combining Images with Complementary Strengths; Maria Ingaramo, Andrew G. York, Eelco Hoogendoorn, Marten Postma, Hari Shroff, George H. Patterson; ChemPhysChem Volume 15, Issue 4, pages 794–800, March 17, 2014">Ingaramo 2014</a>].
+</p><p>
+Also, as <a href="./appendix.html#Comparing_image_quality" target="_self">discussed above</a>, deconvolution is neccesary to compare how accurately point-STED and line-STED measure the low spatial frequencies of the test object, since every spatial frequency is systematically underestimated by the measurement process.
+</p>
 <pre><code class="language-python">
 class Deconvolver:
     def __init__(self, psfs, output_prefix=None, verbose=True):

@@ -12,7 +12,7 @@ Based on this theme: https://github.com/broccolini/dinky , which mentioned that 
     <base target="_blank">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>line-rescan-sted by AndrewGYork</title>
+    <title>rescan_line_sted by AndrewGYork</title>
 
     <link rel="stylesheet" href="stylesheets/styles.css">
     <link rel="stylesheet" href="stylesheets/prism.css">
@@ -29,7 +29,7 @@ Based on this theme: https://github.com/broccolini/dinky , which mentioned that 
   <body>
     <div class="wrapper">
       <header>
-        <h1 class="header">Line-rescan-sted</h1>
+        <h1 class="header">Rescan-line-sted</h1>
         <p class="header"></p>
 
         <ul>
@@ -58,7 +58,7 @@ Abstract</h4>
 
 [<a class="citation" href="http://dx.doi.org/10.1364/OL.19.000780" title="Breaking the diffraction resolution limit by stimulated emission: stimulated-emission-depletion fluorescence microscopy; Stefan W. Hell and Jan Wichmann; Optics Letters Vol. 19, Issue 11, pp. 780-782 (1994)">Hell 1994</a>]
 
-substantially improves the resolution of point-scanning confocal microscopy, at the cost of reduced emission signal and massively increased illumination dose. The resulting tradeoffs between resolution, speed, signal-to-noise ratio, and photodamage can be frustrating, especially for live samples. I describe a gentler, much faster alternative technique based on a combination of STED with line-scanning confocal microscopy 
+substantially improves the resolution of point-scanning confocal microscopy, at the cost of reduced emission signal and massively increased illumination dose. The resulting tradeoffs between resolution, speed, signal-to-noise ratio, and photodamage can be frustrating, especially for live samples. We describe a gentler, much faster alternative technique based on a combination of STED with line-scanning confocal microscopy 
 
 [<a class="citation" href="http://dx.doi.org/10.1117/1.2402110" title="High-speed confocal fluorescence imaging with a novel line scanning microscope; Ralf Wolleschensky, Bernhard Zimmermann, Michael Kempe; J. Biomed. Opt. 11(6), 064011">Wolleschensky 2006</a>],
 
@@ -85,7 +85,7 @@ Introduction</h3>
 <h4>
 STED improves microscope resolution at the expense of speed and gentleness</h4>
 <p>
- The STED technique uses an intense depletion ‘<a href="./appendix.html#Pastries">doughnut</a>’ (Fig. 1a, green) to shrink the fluorescence excitation region (Fig. 1b, dotted blue) of a point-scanning confocal microscope. As the illumination is scanned across to the sample (Figure 1a, 1b, gray), a fluorophore endures many excitation-depletion cycles before and after it is allowed to briefly emit signal (Figure 1b, solid blue). If the STED doughnut improves lateral resolution by a factor of \(R\) (Figure 1e), the 2D area of the emission region decreases by roughly \(R^2\) (reducing emissions per scan and emissions per second) and the number of scan positions (Figure 1a and 1b, gray) must increase by a factor of \(R^2\) to satisfy Nyquist sampling (Figure 1c, red). At least one full-intensity depletion pulse must be delivered at each of these finer scan positions to maintain \(R\), and of course the depletion pulse intensity grows rapidly with \(R\).
+ The STED technique uses an intense depletion ‘<a href="./appendix.html#Pastries">doughnut</a>’ (Fig. 1a, green) to shrink the fluorescence excitation region (Fig. 1b, dotted blue) of a point-scanning confocal microscope. As the illumination is scanned across the sample (Figure 1a, 1b, gray), a fluorophore endures many excitation-depletion cycles before and after it is allowed to briefly emit signal (Figure 1b, solid blue). If the STED doughnut improves lateral resolution by a factor of \(R\) (Figure 1e), the 2D area of the emission region decreases by roughly \(R^2\) (reducing emissions per scan and emissions per second) and the number of scan positions (Figure 1a and 1b, gray) must increase by a factor of \(R^2\) to satisfy Nyquist sampling (Figure 1c, red). At least one full-intensity depletion pulse must be delivered at each of these finer scan positions to maintain \(R\), and of course the depletion pulse intensity grows rapidly with \(R\).
 </p>
 <figure id="Figure_1">
 <img src="./images/figure_1/point_1p00exc_9p00dep_008samps_001pulses.svg" alt="Figure 1" id="Figure_1_image">
