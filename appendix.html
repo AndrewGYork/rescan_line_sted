@@ -29,7 +29,7 @@ Based on this theme: https://github.com/broccolini/dinky , which mentioned that 
   <body>
     <div class="wrapper">
       <header>
-        <h1 class="header">Line-rescan-sted</h1>
+        <h1 class="header">Rescan-line-sted</h1>
         <p class="header"></p>
 
         <ul>
@@ -132,13 +132,13 @@ Comparing image quality</h4>
 </p><p>
  Real-space metrics of image quality (for example, mean-squared error) typically ask exactly this type of mixed multiple question, asking for known low frequencies and unknown high frequencies  simultaneously, and penalizing guaranteed-to-be-wrong answers about high spatial frequencies. Low-pass filtered real-space metrics of image quality are more defensible, but the optimal choice of low-pass filter depends on the object being imaged.
 </p><p>
- A plot of reconstruction error vs. spatial frequency cleanly avoids such problems; the transition in <a href="./index.html#Figure_2">Figure 2</a>(d, e) is obvious, and known quantities are characterized separately from unknown quantities. Image quality via this metric (or any other) is certainly subjective and certainly not well-ordered. However, if one imaging method produces a larger region of known frequencies compared to another, and error is strictly lower in this region, than we can conclude the lower-error method is better. In conclusion: <strong>if line STED gives a larger region of lower Fourier error compared to point STED, for the same cumulative excitation and depletion fluence, then line STED is gentler than point STED.</strong> As my simulations in <a href="./index.html#Figure_2">Figure 2</a> show, it does, for the entire range of resolution improvements I've checked.
+ A plot of reconstruction error vs. spatial frequency cleanly avoids such problems; the transition in <a href="./index.html#Figure_2">Figure 2</a>(d, e) is obvious, and known quantities are characterized separately from unknown quantities. Image quality via this metric (or any other) is certainly subjective and certainly not well-ordered. However, if one imaging method produces a larger region of known frequencies compared to another, and error is strictly lower in this region, than we can conclude the lower-error method's image quality is strictly better. In conclusion: <strong>if line STED gives a larger region of lower Fourier error compared to point STED, for the same cumulative excitation and depletion fluence, then line STED is gentler than point STED.</strong> As my simulations in <a href="./index.html#Figure_2">Figure 2</a> show, it does, for the entire range of resolution improvements I've checked.
 </p>
 
 <h3 id=Figure_2_parameters>
 Figure 2 simulation parameters</h3>
 <p>
- As discussed above, <a href="appendix.html#Tuning_STED" target="_self">a correctly tuned STED microscope</a> doesn't have as many degrees of freedom as Figure 1 suggests. In <a href="index.html#Figure_2">Figure 2</a>, rather than choose <code>Excitation</code>, <code>Depletion</code>, <code>Scan Density</code>, and <code>Exposure time</code> independently, we instead choose a desired resolution improvement and signal level for descan point-STED, and my code solves for the inputs which will give this output. To avoid excessive excitation dose or depletion dose, we minimize <code>Exposure time</code> subject to the constraint that <code>Excitation &lt; 0.25</code>.
+ As discussed above, <a href="appendix.html#Tuning_STED" target="_self">a correctly tuned STED microscope</a> doesn't have as many degrees of freedom as Figure 1 suggests. In <a href="index.html#Figure_2">Figure 2</a>, rather than choose <code>Excitation</code>, <code>Depletion</code>, <code>Scan Density</code>, and <code>Exposure time</code> independently, we instead choose a desired resolution improvement and signal level for descan point-STED, and <a href="appendix.html#tune_psf()" target="_self">my code</a> solves for the inputs which will give this output. To avoid excessive excitation dose or depletion dose, we minimize <code>Exposure time</code> subject to the constraint that <code>Excitation &lt; 0.25</code>.
 </p><p>
  After parameters are chosen for point-STED, I choose resolution improvement and signal level for descan and rescan line-STED that will give <a href="./appendix.html#Comparing_photodose" target="_self">the same excitation and depletion dose</a> as point-STED, and my code solves for the inputs which will give this output, subject to the same minimization of <code>Exposure time</code> and constraint that <code>Excitation &lt; 0.25</code>. For each comparison, I choose the number of line-STED orientations to give <a href="./appendix.html#Comparing_image_quality" target="_self">strictly better image quality</a> than point-STED; this number increases with increased resolution.
 </p><p>
@@ -196,40 +196,41 @@ table, th, td {
 </table>
 </div>
 
-<h3 id="Speed">
-Speed limits in microscopy</h3>
+<h3 id="Array_detectors">
+Array detectors</h3>
 <p>
-I need to establish that speed can be boiled down to two numbers: number of camera exposures, and number of scan positions. This is complicated, because it's not quite so simple.
+An ideal array detector would report the precise location and arrival time of each photoelectron, and nothing else. <a href="http://www.fairchildimaging.com/category/product-category/focal-plane-arrays/scmos" title="Scientific complementary metal-oxide-semiconductor (sCMOS) chips">The best existing array detectors</a> bin photoelectrons in space (pixels) and time (frames), currently yielding on the order of \(10^9\) bins per second with additive "read noise" of \(\sim 1\) \(e^-\) per bin, and substantial "dead time" between frames.
 </p><p>
-Speed considerations:
+ For a concrete example, my preferred camera is the <a href="http://www.pco.de/scmos-cameras/pcoedge-42/">pco.edge 4.2</a> (a member of the Fairchild sCMOS family that also includes the <a href="http://www.hamamatsu.com/eu/en/community/life_science_camera/product/search/C11440-22CU/index.html">Hamamatsu Orca Flash 4</a>, the <a href="http://www.andor.com/scientific-cameras/neo-and-zyla-scmos-cameras/zyla-42-plus-scmos">Andor Zyla</a>, and the <a href="http://www.photometrics.com/products/scmos/prime.php">Photometrics Prime</a>):
 </p>
-<ul><li>Emitted photons per second (size of the glowing region)
+<ul><li>
+The camera is exceptionally fast, yielding up to \(\sim4.2 \times 10^8\) pixels per second, but not for an arbitrary field of view. More accurately, it yields up to \(\sim2\times10^5\) lines per second, with each line up to 2048 pixels wide, meaning cropping the field-of-view in the vertical direction increases the frame rate, but cropping in the horizontal direction merely discards information.
+</li><li>
+The additive read noise is exceptionally low (specified at &lt0.8 \(e^-\) per pixel), but is not perfectly uniform across the chip
 
-</li><li> Intensity measurements per second
+[<a class="citation" href="http://dx.doi.org/10.1038/nmeth.2488" title="Video-rate nanoscopy using sCMOS camera–specific single-molecule localization algorithms; Fang Huang, Tobias M P Hartwich, Felix E Rivera-Molina, Yu Lin, Whitney C Duim, Jane J Long, Pradeep D Uchil, Jordan R Myers, Michelle A Baird, Walther Mothes, Michael W Davidson, Derek Toomre & Joerg Bewersdorf; Nature Methods 10, 653–658 (2013)">Huang 2013</a>],
 
-</li><li> Scan positions per second
-
-</li><li> Laser pulses per second
-
-</li><li> Other overhead (non-fundamental but common)
-
-</li><li> Non-poisson noise per intensity measurement. (Since this reduces SNR, it effectively reduces photons per second)
-
-</li><li>How does speed scale with field of view?
-
-</li><li>How does laser brightness scale with field of view?
+follows neither a Poisson nor a Gaussian distribution, and absolutely cannot be ignored when considering SNR for all but the brightest samples.
+</li><li>
+ The camera's "dead time" between frames is technically zero, but effectively \(\sim 4.9\) \(\mu s\) per camera line. (Different camera lines begin their exposure at different times; a typical strategy to avoid artifacts due to this "rolling shutter" is to leave illumination off until all lines have begun exposing, then turn on illumination until the first line finishes exposing).
 </li></ul>
+</p><p>
+ Dead time dominates for short exposure times and/or large fields of view. Since the entire motivation for multipoint STED is fast imaging of large fields of view, we expect dead time to be the dominant speed limit, which is why <a href="./index.html#Figure_3">Figure 3</a> displays "camera exposures" in addition to "scan positions" for every <code>Imaging method:</code> except <code>Descan point</code>.
+</p>
 
-<ul><li>Descanned single-point STED is fundamentally limited by photons per second.
-
-</li><li>Scanned multi-point STED is currently limited by intensity measurements per second, and frames per second. It also suffers from increased read noise.
-
-</li><li>Descanned line-STED is currently limited by intensity measurements per second, and frames per second. It also suffers from increased read noise, and is further limited by K-mirror rotation speed.
-
-</li><li>Rescanned line-STED ...
+<h3 id="Summing_pixels">
+Summing pixels</h3>
+<p>
+An imaging method that sums multiple camera pixels to form a single logical pixel suffers in several ways:
+<ul><li>
+The effective bins per second decrease by the number of camera pixels per logical pixel, and the dead time increases by the number of camera lines per logical pixel.
+</li><li>
+Read noise per pixel is uncorrelated, and therefore adds in quadrature. If 100 pixels from a pco.edge camera are summed, the expected read noise will be \(\sqrt{100} \times 0.8\) \(e^-\ \approx 8\) \(e^-\) per logical pixel, which dominates photoelectron counting <a href="http://en.wikipedia.org/wiki/Shot_noise">Poisson noise</a> unless a pixel collects at least \(8^2 = 64\) photoelectrons per exposure. To maintain image quality, we must increase exposure time (excitation/depletion pulse pairs per scan position), further reducing imaging speed.
+</li><li>
+Because we must increase exposure time to increase emitted signal to maintain <a href="./appendix.html#Comparing_image_quality" target="_self">image quality</a>, we also increase photodose. Especially for dim or fragile samples, photodamage may make this impractical or impossible.
 </li></ul>
-
-
+Taken together, these factors badly penalize speed and gentleness in typical multipoint STED implementations.
+</p>
 
 <h3 id="Pastries">
 Pastries</h3>
@@ -243,16 +244,16 @@ Several times in the article, I describe shapes by reference to pastries. In cas
 <img alt="A picture of an eclair" src="./images/eclair.jpg">
 </p>
 
-<h3 id="line_sted_figure_x.py">
+<h3 id="figure_source_code">
 Code: <code>line_sted_figure_1.py</code>, <code>line_sted_figure_2.py</code>, <code>line_sted_figure_3.py</code></h3>
 <p>
 The data for Figures 1, 2, and 3 are created by running the corresponding Python 3 modules <code>line_sted_figure_1.py</code>, <code>line_sted_figure_2.py</code>, and <code>line_sted_figure_3.py</code>. You can view these modules in the <a href="https://github.com/AndrewGYork/rescan_line_sted/tree/master/figure_generation"><code>rescan_line_sted</code> Github respository</a>. If you want to run or modify this code yourself, you'll need a <a href="https://www.python.org/downloads/">Python 3 environment</a>, and also the Python subpackages <a href="http://www.numpy.org/">Numpy</a>, <a href="https://www.scipy.org/">Scipy</a>, and <a href="http://matplotlib.org/">Matplotlib</a>. <a href="https://www.continuum.io/downloads">Anaconda</a> satisfies these requirements with a single installation; if you're new to Python, this is the approach I recommend.
 </p><p>
 Once you've set up an appropriate Python 3 environment (including Numpy, Scipy, and Matplotlib), download and unzip the <a href="https://github.com/AndrewGYork/rescan_line_sted/zipball/master"><code>rescan_line_sted</code> repository</a>, navigate to the <code>figure_generation</code> directory, and execute the three figure generation scripts. They take quite a while to run (especially <code>line_sted_figure_3.py</code>), print a lot of gibberish to the console, and they generate a lot of output files (>10,000 files, >4 GB). Their output will be placed in a directory called <code>big_images</code>, which will be two levels up from the <code>figure_generation</code> directory (the same level as the <code>master</code> directory you unzipped).
 </p><p>
-Most of this output is in <code>.svg</code> format, which Matplotlib generates directly. Some of the output is in <code>.gif</code> or <code>.mp4</code> format, which Matplotlib doesn't generate directly, so I generate <code>.svg</code> from Matplotlib and then my Python code calls <a href="https://www.imagemagick.org/script/index.php">ImageMagick</a> and <a href="https://www.ffmpeg.org/">ffmpeg</a> to convert to <code>.gif</code> and <code>.mp4</code>, respectively. If you want to do these conversions yourself, you'll have to install ImageMagick and ffmpeg, and you might have to modify the parts of my Python script that call ImageMagick and ffmpeg, if they're called differently on your OS then on mine. Email me if this is both challenging and important to you.
+Most of this output is in <code>.svg</code> format, which Matplotlib generates directly. Some of the output is in <code>.gif</code> or <code>.mp4</code> format, which Matplotlib doesn't generate directly, so I generate <code>.svg</code> from Matplotlib and then my Python code calls <a href="https://www.imagemagick.org/script/index.php">ImageMagick</a> and <a href="https://www.ffmpeg.org/">ffmpeg</a> to convert to <code>.gif</code> and <code>.mp4</code>, respectively. If you want to do these conversions yourself, you'll have to install ImageMagick and ffmpeg, and you might have to modify the parts of my Python script that call ImageMagick and ffmpeg, if they're called differently on your OS then on mine. <a href="mailto:andrew.g.york+linerescan@gmail.com" target="_self">Email me</a> if this is both challenging and important to you.
 </p><p>
-Note that my figure generation code is mostly concerned with formatting the figures; you don't have to understand this code to understand my calculations. If you want to understand the calculations which the paper is based on, I recommend focusing on <code>line_sted_tools.py</code>.
+Note that my figure generation code is mostly concerned with formatting the figures; you don't have to understand this code to understand my calculations. If you want to understand the calculations which the paper is based on, I recommend focusing on <code>line_sted_tools.py</code>, described below.
 </p>
 
 <h3 id="line_sted_tools.py">

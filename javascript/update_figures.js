@@ -46,7 +46,6 @@ function update_figure_3() {
     filename = filename.concat(num);
   }
   filename = filename.concat(img + fov + res + ".mp4");
-  console.log(filename);
   var vid = document.getElementById("Figure_3_vid");
   vid.src = filename;
 }

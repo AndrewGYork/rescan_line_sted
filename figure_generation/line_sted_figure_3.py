@@ -303,7 +303,7 @@ def generate_figure(
     plt.imshow(np.clip(img, 0, 1), interpolation='nearest')
     ax.get_xaxis().set_ticks([])
     ax.get_yaxis().set_ticks([])
-    ax.set_xlabel("(d) Pulses delivered: %05i\n\n "%(pulses_delivered))
+    ax.set_xlabel("(d) Scan positions: %05i\n\n\n "%(pulses_delivered))
     # Detector
     ax = plt.subplot(1, 3, 2)
     plt.title("(b) Detector")
