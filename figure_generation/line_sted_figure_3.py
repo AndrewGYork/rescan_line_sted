@@ -40,7 +40,7 @@ def main():
         if not os.path.isdir(output_dir): os.makedirs(output_dir)
     fig = plt.figure(figsize=(10, 4), dpi=100)
     psf_width = 25 # Same as Figure 2, in object pixels
-    for im_name in ('lines', 'rings', ):
+    for im_name in ('lines', 'rings_2',):
         obj = np_tif.tif_to_array('test_object_'+ im_name +'.tif') / 255 + 1e-6
         for fov_size in (1, 2,):
             obj = np.tile(obj, (1, fov_size, fov_size))
