@@ -140,7 +140,7 @@ massively parallelizes the signal emission area, and greatly reduces the number 
 </p>
 <h3>
 Results</h3>
-<h4>
+<h4 id=line_sted_is_gentler>
 Line-scanning STED is gentler than point-scanning STED</h4>
 <p>
  A gentler technique gives <a href="./appendix.html#Comparing_gentleness">higher image quality for the same photodose</a>. Unfortunately, the simplest comparison (changing Figure 1 from <code>Shape: Point</code> to <code>Shape: Line</code>) isn't fair or conclusive; line-STED decreases excitation and depletion dose compared to point-STED, but also reduces emissions per molecule and badly degrades resolution perpendicular to the scan direction.
@@ -176,7 +176,7 @@ and fuse these measurements into a single high-quality image via iterative decon
     <option value="rings_">Rings</option>
   </select></td><td>(choice of resolution targets)</td>
   </tr><tr>
-  <td>Line STED scan type:</td><td><select id="Figure_2_scan_type" onchange="update_figure_2()">
+  <td>Line-STED scan type:</td><td><select id="Figure_2_scan_type" onchange="update_figure_2()">
     <option value="_ld" selected="selected">Descanned</option>
     <option value="_lr">Rescanned</option>
   </select></td><td>(point STED is descanned)</td>
@@ -201,7 +201,7 @@ Single-point STED (Figure 3 with <code>Imaging method: Descan point</code>) can 
 
 [<a class="citation" href="http://dx.doi.org/10.1038/nmeth.3481" title="Ultrafast, temporally stochastic STED nanoscopy of millisecond dynamics; Jale Schneider, Jasmin Zahn, Marta Maglione, Stephan J Sigrist, Jonas Marquard, Jakub Chojnacki, Hans-Georg Kräusslich, Steffen J Sahl, Johann Engelhardt & Stefan W Hell; Nature Methods 12, 827–830 (2015)">Schneider 2014</a>],
 
-leaving the number of scan positions (Figure 3d) as its primary speed limit. This limit scales poorly for point-STED, like the product of \(R^2\) and the two lateral image dimensions (compare <code>STED resolution: 1.00</code> vs. <code>STED resolution: 3.00</code>, and also compare <code>Field of view: 1 by 1</code> vs. <code>Field of view: 2 by 2</code> in Figure 3). This limit still allows 10-1000 frames per second (for sufficiently small fields of view), but not with usable SNR in a single frame. Multiple pulses per scan position are always used to improve SNR, reducing point-STED's effective speed well below video rate unless the sample is extremely bright and sparse
+leaving the number of scan positions (Figure 3d) as its primary speed limit. This limit scales poorly for point-STED, like the product of \(R^2\) and the two lateral image dimensions (compare Figure 3d for <code>STED resolution: 1.00</code> vs. <code>STED resolution: 3.00</code>, and also for <code>Field of view: 1 by 1</code> vs. <code>Field of view: 2 by 2</code>). This limit still allows 10-1000 frames per second (for sufficiently small fields of view), but not with usable SNR in a single frame. Multiple pulses per scan position are always used to improve SNR, reducing point-STED's effective speed well below video rate unless the sample is extremely bright, sparse, and small
 
 [<a class="citation" href="http://dx.doi.org/10.1126/science.1154228" title="Video-Rate Far-Field Optical Nanoscopy Dissects Synaptic Vesicle Movement; Volker Westphal, Silvio O. Rizzoli, Marcel A. Lauterbach, Dirk Kamin, Reinhard Jahn, Stefan W. Hell; Science 11 Apr 2008: Vol. 320, Issue 5873, pp. 246-249">Westphal 2008</a>,
 
@@ -217,7 +217,7 @@ leaving the number of scan positions (Figure 3d) as its primary speed limit. Thi
 <table class="figure_controls">
   <tr>
   <td>Imaging method:</td><td><select id="Figure_3_imaging_method" onchange="update_figure_3()">
-    <option value="descan_point_" selected="selected" >Descan point</option>
+    <option value="descan_point_" selected="selected">Descan point</option>
     <option value="nondescan_multipoint_">Multipoint</option>
     <option value="descan_line_">Descan line</option>
     <option value="rescan_line_">Rescan line</option>
@@ -225,12 +225,12 @@ leaving the number of scan positions (Figure 3d) as its primary speed limit. Thi
   </tr><tr>
   <td>STED resolution:</td><td><select id="Figure_3_resolution" onchange="update_figure_3()">
     <option value="1p00xR">1.00</option>
-    <option value="2p00xR">2.00</option>
-    <option value="3p00xR" selected="selected" >3.00</option>
+    <option value="2p00xR" selected="selected">2.00</option>
+    <option value="3p00xR">3.00</option>
   </select></td><td>(compared to the diffraction limit)</td>
   </tr><tr>
   <td>Image:</td><td><select id="Figure_3_test_image" onchange="update_figure_3()">
-    <option value="lines_" selected="selected" >Lines</option>
+    <option value="lines_" selected="selected">Lines</option>
     <option value="rings_2_">Rings</option>
   </select></td><td>(choice of test image)</td>
   </tr><tr>
@@ -246,15 +246,12 @@ leaving the number of scan positions (Figure 3d) as its primary speed limit. Thi
   </select></td><td>(number of scan directions, line-STED only)</td>
   </tr>
 </table>
-<figcaption><strong>Figure 3: Interactive, animated comparison of point, multipoint, descan line, and rescan line STED speed.</strong> See <a href="./appendix.html">Appendix</a> for a description of the simulation's <a href="./appendix.html#Assumptions">assumptions</a> and <a href="./appendix.html#figure_source_code">source code</a>. <strong>(a)</strong> Simulated fluorescent object (grayscale), with animation showing post-depletion excitation probability (blue, corresponding to the solid blue line in Figure 1b) and resulting excitation (green) during STED scanning. <strong>(b)</strong> Animated distribution of fluorescent signal at the detector (green). <strong>(c)</strong> Pre-deconvolution image calculated from detector signal (grayscale), highlighting the most recently measured pixels (green) <strong>(d)</strong> Running total of the number of scan positions used. <strong>(e)</strong> Running total of the number of camera exposures used.</figcaption>
-</figure><p></p>
-<p>
-</p><p>
-</p>
+<figcaption><strong>Figure 3: Interactive, animated comparison of point, multipoint, descan line, and rescan line STED speed.</strong> See <a href="./appendix.html">Appendix</a> for a description of the simulation's <a href="./appendix.html#Assumptions">assumptions</a> and <a href="./appendix.html#figure_source_code">source code</a>. <strong>(a)</strong> Simulated fluorescent object (grayscale), with animation showing post-depletion excitation probability (blue, corresponding to the solid blue line in Figure 1b) and resulting excitation (green) during STED scanning. <strong>(b)</strong> Animated distribution of cumulative (grayscale) and instantaneous (green) fluorescent signal at the detector. <strong>(c)</strong> Pre-deconvolution image calculated from detector signal (grayscale), highlighting the changes due to the most recent detector measurement (green) <strong>(d)</strong> Running total of the number of scan positions used. <strong>(e)</strong> Running total of the number of camera exposures used.</figcaption>
+</figure>
 <h6>
 Multipoint-STED speed</h6>
 <p>
-Parallel point-STED via multiple excitation/depletion points
+Parallelizng STED via multiple excitation/depletion points
 
 [<a class="citation" href="http://dx.doi.org/10.1364/OE.19.023716" title="Parallelized STED fluorescence nanoscopy; Pit Bingen, Matthias Reuss, Johann Engelhardt, and Stefan W. Hell; Optics Express Vol. 19, Issue 24, pp. 23716-23726 (2011)">Bingen 2011</a>,
 
@@ -262,7 +259,7 @@ Parallel point-STED via multiple excitation/depletion points
 
 <a class="citation" href="http://dx.doi.org/10.1364/OE.23.000211" title="2000-fold parallelized dual-color STED fluorescence nanoscopy; Fabian Bergermann, Lucas Alber, Steffen J. Sahl, Johann Engelhardt, and Stefan W. Hell; Optics Express Vol. 23, Issue 1, pp. 211-223 (2015)">Bergermann 2015</a>]
 
-can greatly reduce the number of scan positions (compare Figure 3 with <code>Imaging method: Descan point</code> vs. <code>Imaging method: Multipoint</code>). The number of scan positions still scales like \(R^2\) (compare Figure 3d with <code>STED resolution: 1.00</code> vs. <code>STED resolution: 3.00</code>), since the step size must satisfy Nyquist sampling and excitation points are typically separated by at least the width of the emission PSF to avoid crosstalk. However the number of scan positions can be independent of the field of view, potentially an enormous speedup (compare Figure 3d with <code>Field of view: 1 by 1</code> vs. <code>Field of view: 2 by 2</code>).
+can greatly reduce the number of scan positions (compare Figure 3d with <code>Imaging method: Descan point</code> vs. <code>Imaging method: Multipoint</code>). The number of scan positions still scales like \(R^2\) (compare Figure 3d with <code>STED resolution: 1.00</code> vs. <code>STED resolution: 3.00</code>), since the step size must satisfy Nyquist sampling and excitation points are typically separated by at least the width of the emission PSF to avoid crosstalk. However, the number of scan positions can be independent of the field of view, potentially an enormous speedup (compare Figure 3d with <code>Field of view: 1 by 1</code> vs. <code>Field of view: 2 by 2</code>).
 </p><p>
 Unfortunately, multipoint STED is bottlenecked by <a href="./appendix.html#Array_detectors">existing array detectors</a>. Highly parallel multipoint STED implementations 
 
@@ -278,39 +275,21 @@ acquire \(10^2\)-\(10^3\) camera frames (Figure 3e) per STED image, and spread t
 
 [<a class="citation" href="http://dx.doi.org/10.1364/OE.23.000211" title="2000-fold parallelized dual-color STED fluorescence nanoscopy; Fabian Bergermann, Lucas Alber, Steffen J. Sahl, Johann Engelhardt, and Stefan W. Hell; Optics Express Vol. 23, Issue 1, pp. 211-223 (2015)">Bergermann 2015</a>]).
 </p>
-<h6>
+<h6 id="descan_line_sted_speed">
 Descanned line-STED speed</h6>
 <p>
-Existing eclair-based line-scanning STED techniques offer a similar tradeoff to multipoint STED (compare Fig. 3d,e with <code>Imaging method: Multipoint</code> vs. <code>Imaging method: Descan line</code>), decreasing scan positions compared to point-STED at the expense of a large number of camera exposures, and spreading the signal from a single scan point across multiple detector pixels
+Existing eclair-based line-scanning STED techniques 
 
-[<a class="citation" href="http://www.ub.uni-heidelberg.de/archiv/14362" title="4Pi Nanoscopy parallelized by line scanning; Dissertation by Franziska Curdt, supervised by Stefan Hell">Curdt 2013</a>]. The number of scan positions scales like the product of \(R\) (<code>STED resolution:</code> in Figure 3) and one of the lateral image dimensions (compare <code>Field of view: 1 by 1</code> vs. <code>Field of view: 2 by 2</code> in Figure 3), and the number of scan directions (which also scales roughly like \(R\), see Figure 2g and <code>Orientations:</code> in Figure 3).
+[<a class="citation" href="http://www.ub.uni-heidelberg.de/archiv/14362" title="4Pi Nanoscopy parallelized by line scanning; Dissertation by Franziska Curdt, supervised by Stefan Hell">Curdt 2013</a>]
+
+offer a similar tradeoff to multipoint STED (compare Figure 3d,e with <code>Imaging method: Multipoint</code> vs. <code>Imaging method: Descan line</code>), decreasing scan positions compared to point-STED at the expense of a large number of camera exposures, and spreading the signal from a single scan point across multiple detector pixels. The primary drawback of line-STED is <a href="./index.html#line_sted_is_gentler" target="_self">multiple scan directions</a> (<code>Orientations:</code> in Figure 3), but fortunately, scan orientation can be switched <a href="./appendix.html#Fast_optical_rotation">extremely rapidly</a>. The number of line-STED scan positions scales like the product of \(R\) (<code>STED resolution:</code> in Figure 3) and the largest lateral image dimension (compare Figure 3d for <code>Field of view: 1 by 1</code> vs. <code>Field of view: 2 by 2</code>), and the number of scan directions (which also scales roughly like \(R\); compare Figure 2g for several values of <code>Point-STED resolution:</code>).
 </p><p>
-However, line-STED gives important advantages over multipoint STED. Since the image of the excitation line (Figure 3a) is descanned onto the camera, only lines within a few emission PSF widths near the center of the chip must be read for each exposure (Figure 3b), which is much faster than reading the whole chip (especially for <a href="./appendix.html#Array_detectors">sCMOS detectors</a>). Several tens of detector pixels are summed to produce each logical pixel rather than hundreds or thousands, giving a substantial decrease in <a href="./appendix.html#Summing_pixels">read noise</a> compared to multipoint-STED. (Also note the reduction in STED pulse power)
-</p><p>
-The primary drawback of line-STED compared to multipoint STED is anisotropic resolution. 
-
-<a href="./appendix.html#Fast_optical_rotation">fast optical rotation</a>
-
-
+Descanned line-STED gives several important advantages over multipoint STED. Since the image of the excitation line (Figure 3a) is descanned onto the camera, only lines within a few emission PSF widths near the center of the chip must be read for each exposure (Figure 3b), which is much faster than reading the whole chip (especially for <a href="./appendix.html#Array_detectors">sCMOS detectors</a>). Several tens of detector pixels are summed to produce each logical pixel rather than hundreds or thousands, giving a substantial decrease in <a href="./appendix.html#Summing_pixels">read noise</a> compared to multipoint-STED; this means that the gentleness advantage of line-STED over multipoint-STED is even greater than Figure 2 suggests. Also note that line-STED requires substantially less energy per depletion pulse than point-STED, since the illuminated area is one or more orders of magnitude smaller, depending on the field of view.
 </p>
 <h6>
 Rescanned line-STED speed</h6>
 <p>
-
-</p><p>
-BELOW THIS LINE IS STILL GARBAGE
-
-
-</p><p>
-, record a separate camera exposure at each scan position , and sum the pixels in each column of the detector, assigning all the light from a single scan position onto a single row of the reconstructed image (Fig. 2d). This optical setup is straightforward (Fig. 2f), but introduces excess read noise, ignores information present in the vertical dimension of the emission point-spread function (PSF), and greatly reduces the camera’s effective pixel rate, negating line-STED’s potential speed advantage.
-
-
-</p><p>
- Let’s address detection first. Existing eclair-based line-scanning techniques (Fig. 2a,
-
-descan their signal onto an sCMOS camera, record a separate camera exposure at each scan position (Fig. 2b), and sum the pixels in each column of the detector, assigning all the light from a single scan position onto a single row of the reconstructed image (Fig. 2d). This optical setup is straightforward (Fig. 2f), but introduces excess read noise, ignores information present in the vertical dimension of the emission point-spread function (PSF), and greatly reduces the camera’s effective pixel rate, negating line-STED’s potential speed advantage.
-</p><p>
- Rescanning the emission eliminates this speed limit by reconstructing from a single camera exposure (Fig 2c), reduces read noise by requiring only one camera pixel per reconstructed pixel (Fig 2e), and improves resolution by using all the information in the emission PSF (<code>line_sted_figure_2.py</code>). Rescanning could be implemented (Fig. 2g) similarly to OPRA/rescan confocal
+Line-STED improves further if we rescan the emission instead of descanning (compare Figure 3d,e with <code>Imaging method: Descan line</code> vs. <code>Imaging method: Rescan line</code>). Rescanning can be implemented similarly to rescan confocal/OPRA
 
 [<a class="citation" href="http://dx.doi.org/10.1186/2192-2853-2-5" title="Optical photon reassignment microscopy (OPRA); Stephan Roth, Colin JR Sheppard, Kai Wicker and Rainer Heintzmann; Optical Nanoscopy (2013) 2:5">Roth 2013</a>,
 
@@ -318,19 +297,20 @@ descan their signal onto an sCMOS camera, record a separate camera exposure at e
 
 or instant SIM
 
-[<a class="citation" href="http://dx.doi.org/10.1038/nmeth.2687" title="Instant super-resolution imaging in live cells and embryos via analog image processing; Andrew G York, Panagiotis Chandris, Damian Dalle Nogare, Jeffrey Head, Peter Wawrzusin, Robert S Fischer, Ajay Chitnis & Hari Shroff; Nature Methods 10, 1122–1126 (2013)">York 2013</a>];
-
-attentive readers will notice that the curves in Figure 1f and 1g start at \(R=1.41\) for rescanned line-STED, since rescanning gives the same resolution advantage as structured illumination microscopy even with no depletion beam.
+[<a class="citation" href="http://dx.doi.org/10.1038/nmeth.2687" title="Instant super-resolution imaging in live cells and embryos via analog image processing; Andrew G York, Panagiotis Chandris, Damian Dalle Nogare, Jeffrey Head, Peter Wawrzusin, Robert S Fischer, Ajay Chitnis & Hari Shroff; Nature Methods 10, 1122–1126 (2013)">York 2013</a>]; in either case, rescanning enhances the already promising <a href="./index.html#descan_line_sted_speed" target="_self">speed</a> and <a href="./index.html#line_sted_is_gentler" target="_self">gentleness</a> advantages of descan line-STED.
+</p><p>
+Rescanning uses only one camera exposure per scan orientation (Figure 3e) and reads only one camera pixel per logical pixel (Figure 3b,c), which substantially improves the detector's <a href="./appendix.html#Summing_pixels">effective readout rate</a>. This also substantially improves <a href="./appendix.html#Summing_pixels">read noise</a>, further improving both speed and gentleness. Rescanning also gives a "free" resolution improvement, especially at low depletion power (compare Figure 3c for <code>Imaging method: Descan line</code> vs. <code>Imaging method: Rescan line</code>, with <code>STED resolution: 1</code> and <code>Image: Rings</code> selected; also compare Figure 2 for <code>Line-STED scan type: Descanned</code> vs <code>Line-STED scan type: Rescanned</code>, with <code>Point-STED resolution:</code> set to <code>1.00x</code> or <code>1.50x</code>). Since a gentler technique gives <a href="./appendix.html#Comparing_gentleness">higher image quality for the same photodose</a>, this is another reason rescanning is gentler than descanning. Note that rescanning gives a strict improvement compared to descanned line-STED; there are no drawbacks apart from additional optics.
+</p><p>
+We've seen that rescanned line-STED is faster and gentler than descanned line-STED, which in turn is faster and gentler than multipoint STED. Finally, compare Figure 3d,e for <code>Imaging method: Descan point</code> vs. <code>Imaging method: Rescan line</code>, and note that rescan line-STED reduces the number of scan positions by an order of magnitude or more, in all cases.
 </p>
 
- Finally, let’s address acquisition speed. Line-STED is potentially much, much faster than point-STED due to parallelized emission and reduced photodose, 
- Rescanning improves resolution even with no STED beam, so a fusion of line excitation rescanned in two directions (Fig. 3b) looks better than descanned point excitation (Fig. 3c) for the same excitation dose. To quantitatively confirm this impression, I also plot reconstruction errors vs. spatial frequency; the black region (indicating good reconstruction accuracy) is clearly larger for the two fused rescanned line measurements (Fig. 3a) than for the single descanned point measurement (Fig. 3d). Line-rescanning’s advantage is even greater for low-intensity STED; rescanned line-STED gives substantially better image quality (Fig. 3f) than descanned point-STED (Fig. 3g), despite using half the excitation dose, and one-third the depletion dose! At high STED intensity, we need additional line-scan directions to evenly cover Fourier space (Fig. 3i), but resolution improvement and image quality is still clearly better (Fig. 3j) than point-STED (Fig. 3k, l) for the same excitation and depletion dose.
- 
-
- In conclusion, rescanned line-STED promises to improve on point-scanning STED in almost every regard. Care must be taken with both the hardware and software to deliver this promise, particularly the integration between acquisition and post-processing, but this is already true of modern microscopes like the Zeiss Airyscan or the dual-view SPIM.
-
-
+<h3>
+Discussion</h3>
+<p>
+In conclusion, rescanned line-STED promises a strict improvement vs. point-STED, mulitpoint-STED, and descanned line-STED: improved image quality for the same photodose (Figure 2), acquired faster (Figure 3). Care must be taken with both the hardware and software to deliver on this promise, particularly the integration between acquisition and image fusion post-processing, but this is already true of modern microscopes like the Zeiss Airyscan (cite) or the dual-view SPIM (cite).
+</p>
 </section>
+
 <footer>
   <a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="./images/cc_by_4p0.png"></a>
 

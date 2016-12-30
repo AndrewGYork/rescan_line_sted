@@ -12,7 +12,7 @@ Based on this theme: https://github.com/broccolini/dinky , which mentioned that 
     <base target="_blank">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>line-rescan-sted by AndrewGYork</title>
+    <title>rescan_line_sted by AndrewGYork</title>
 
     <link rel="stylesheet" href="stylesheets/styles.css">
     <link rel="stylesheet" href="stylesheets/prism.css">
@@ -34,7 +34,7 @@ Based on this theme: https://github.com/broccolini/dinky , which mentioned that 
 
         <ul>
           <li class="download"><a class="buttons" href="https://github.com/AndrewGYork/rescan_line_sted/zipball/master">Download ZIP</a></li>
-          <li><a class="buttons github" href="https://github.com/AndrewGYork/rescan_line_sted" target="_blank">View On GitHub</a></li>
+          <li><a class="buttons github" href="https://github.com/AndrewGYork/rescan_line_sted">View On GitHub</a></li>
         </ul>
 
         <p class="header">This project is maintained by <a class="header name" href="https://github.com/AndrewGYork">AndrewGYork</a></p>
@@ -47,7 +47,7 @@ The real text begins here.
 <section>
 <h1>Appendix</h1>
 <h2> Line-rescanned STED microscopy is gentler and faster than point-descanned STED microscopy</h2>
-<p><a href="./index.html" title="Main text">Back to the main text</a></p>
+<p><a href="./index.html" title="Main text" target="_self">Back to the main text</a></p>
 
 <h3 id="Assumptions">
 Assumptions</h3>
@@ -223,19 +223,19 @@ Summing pixels</h3>
 <p>
 An imaging method that sums multiple camera pixels to form a single logical pixel suffers in several ways:
 <ul><li>
-The effective pixels per second decreases by the number of camera pixels per logical pixel, and the dead time increases by the number of camera lines per logical pixel.
+The effective pixels per second decreases by the number of camera pixels per logical pixel, and the <a href="./appendix.html#Array_detectors" target="_self">dead time</a> increases by the number of camera lines per logical pixel.
 </li><li>
 Read noise per pixel is uncorrelated, and therefore adds in quadrature. If 100 pixels from a pco.edge camera are summed to form a single logical pixel, the expected read noise will be \(\sqrt{100} \times 0.8\) \(e^-\ \approx 8\) \(e^-\) per logical pixel, which dominates photoelectron counting <a href="http://en.wikipedia.org/wiki/Shot_noise">Poisson noise</a> unless a pixel collects at least \(8^2 = 64\) photoelectrons per exposure. To maintain image quality, we must increase exposure time (excitation/depletion pulse pairs per scan position), further reducing imaging speed.
 </li><li>
 Because we must increase exposure time to increase emitted signal to maintain <a href="./appendix.html#Comparing_image_quality" target="_self">image quality</a>, we also increase photodose. Especially for dim or fragile samples, photodamage may make this impractical or impossible.
 </li></ul>
-Taken together, these factors badly penalize speed and gentleness in typical multipoint STED implementations.
+Taken together, these factors badly penalize both speed and gentleness in typical multipoint STED implementations.
 </p>
 
 <h3 id="Fast_optical_rotation">
 Fast optical rotation</h3>
 <p>
-A microscope is only as fast as its slowest component. Both descanned line-STED and rescanned line-STED must acquire multiple images in different scan directions to yield high-quality images, with minimal delay between acquisitions if we want to preserve line-STED's speed advantage over point or multipoint STED.
+A microscope is only as fast as its slowest component. Both descanned line-STED and rescanned line-STED must acquire multiple images in different scan directions to yield high-quality images. If we want to preserve line-STED's speed advantage over point or multipoint STED, we must switch scan directions as rapidly as possible.
 </p><p>
 <img alt="A 'switchyard' to enable fast optical rotation" src="./images/optical_switchyard.png">
 </p><p>
@@ -243,9 +243,13 @@ Panel (a) of the image above shows a "k-mirror", an elegant method to rotate the
 
 [<a class="citation" href="http://www.ub.uni-heidelberg.de/archiv/15986" title="LineRESOLFT Microscopy; Dissertation by Sebastian Schubert, supervised by Stefan Hell">Schubert 2013</a>].
 
-Similar to a <a href="http://en.wikipedia.org/wiki/Dove_prism">dove prism</a> but aberration-free, mechanical rotation of the k-mirror about its axis rotates the image that it transmits, but unfortunately this mechanical rotation is typically quite slow.
+Similar to a <a href="http://en.wikipedia.org/wiki/Dove_prism">dove prism</a> but aberration-free, mechanical rotation of the k-mirror about its axis rotates the image that it transmits. Unfortunately this mechanical rotation is typically quite slow.
 </p><p>
-Panel (b) of the image above illustrates a faster way to change scan directions, an ‘optical switchyard’. An input beam travels either the right or the left path, with a pair of galvanometric mirrors allowing sub-millisecond switching between the two paths. In each path is an image-rotating element (such as a k-mirror). Two line-scan directions could be taken back-to-back with submillisecond delay as shown in panel (c); for more scan directions, one k-mirror could rotate while the other is in use. I’ve illustrated this setup with seven reflections in each path for conceptual simplicity, but an optimized version could reduce the number of mirrors, and/or increase the number of available scan directions.
+Panel (b) of the image above illustrates a faster way to change scan directions, an "optical switchyard". An input beam travels either the right or the left path, with a pair of galvanometric or MEMS mirrors allowing sub-millisecond switching
+
+[<a class="citation" href="http://www.adriaticresearch.org/Research/pdf/VM_MOEMS04.pdf" title=" Sub-100 µs settling time and low voltage operation for gimbal-less two-axis scanners; V. Milanović, K. Castelino; IEEE/LEOS Optical MEMS, 2004">Milanović 2004</a>]
+
+ between the two paths. In each path is an image-rotating element (such as a k-mirror). Two line-scan directions could be taken back-to-back with submillisecond delay as shown in panel (c); for more scan directions, one k-mirror could rotate while the other is in use, or the switchyard could have additional arms. I’ve illustrated this setup with seven reflections in each path for conceptual simplicity, but an optimized version could reduce the number of mirrors.
 </p>
 
 <h3 id="Pastries">
