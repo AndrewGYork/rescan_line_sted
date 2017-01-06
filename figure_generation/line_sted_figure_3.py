@@ -360,8 +360,14 @@ def animate(input_filenames, output_filename):
         print("Gif conversion failed. Is ImageMagick installed?")
         return None
     convert_command = [
-        'ffmpeg', '-y', '-i', output_filename_gif,
-        '-preset', 'veryslow', '-crf', '25', output_filename_mp4]
+        'ffmpeg', '-y',
+        '-i', output_filename_gif,
+        '-movflags', 'faststart',
+        '-pix_fmt', 'yuv420p',
+        '-vf', 'scale=trunc(iw/2)*2:trunc(ih/2)*2',
+        '-preset', 'veryslow',
+        '-crf', '25',
+        output_filename_mp4]
     try: # Now try to convert the gif to mp4
         with open('conversion_messages.txt', 'wt') as f:
             f.write("So far, everthing's fine...\n")

@@ -25,3 +25,4 @@ document.addEventListener("DOMContentLoaded", function(event) {
     last_section.appendChild(list_of_refs);
   }
 });
+
