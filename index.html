@@ -11,7 +11,7 @@ Based on this theme: https://github.com/broccolini/dinky , which mentioned that 
   <head>
     <base target="_blank">
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>rescan_line_sted by AndrewGYork</title>
 
     <link rel="stylesheet" href="stylesheets/styles.css">
@@ -44,8 +44,8 @@ Based on this theme: https://github.com/broccolini/dinky , which mentioned that 
 The real text begins here.
 ##############################################################
  -->
-<section>
 <h1>Research article</h1>
+<section>
 <h2> Line-rescanned STED microscopy is gentler and faster than point-descanned STED microscopy</h2>
 <p class="author_list">Andrew G. York<sup>1*</sup>, Maria Ingaramo<sup>1</sup> and Benjamin K. Cooper<sup>1</sup></p>
 <p class="author_affiliations"><sup>1</sup>Calico Life Sciences LLC, South San Francisco, CA 94080, USA</p>
@@ -88,7 +88,7 @@ STED improves microscope resolution at the expense of speed and gentleness</h4>
  The STED technique uses an intense depletion ‘<a href="./appendix.html#Pastries">doughnut</a>’ (Fig. 1a, green) to shrink the fluorescence excitation region (Fig. 1b, dotted blue) of a point-scanning confocal microscope. As the illumination is scanned across the sample (Figure 1a, 1b, gray), a fluorophore endures many excitation-depletion cycles before and after it is allowed to briefly emit signal (Figure 1b, solid blue). If the STED doughnut improves lateral resolution by a factor of \(R\) (Figure 1e), the 2D area of the emission region decreases by roughly \(R^2\) (reducing emissions per scan and emissions per second) and the number of scan positions (Figure 1a and 1b, gray) must increase by a factor of \(R^2\) to satisfy Nyquist sampling (Figure 1c, red). At least one full-intensity depletion pulse must be delivered at each of these finer scan positions to maintain \(R\), and of course the depletion pulse intensity grows rapidly with \(R\).
 </p>
 <figure id="Figure_1">
-<img src="./images/figure_1/point_1p00exc_9p00dep_008samps_001pulses.svg" alt="Figure 1" id="Figure_1_image">
+<img src="./images/figure_1/point_1p00exc_9p00dep_008samps_001pulses.svg" alt="Figure 1" id="Figure_1_image" width="720">
 <table class="figure_controls">
   <tr>
   <td>Depletion:</td><td><select id="Figure_1_depletion" onchange="update_figure_1()">
@@ -179,7 +179,7 @@ and fuse these measurements into a single high-quality image via iterative decon
   <td>Line-STED scan type:</td><td><select id="Figure_2_scan_type" onchange="update_figure_2()">
     <option value="_ld" selected="selected">Descanned</option>
     <option value="_lr">Rescanned</option>
-  </select></td><td>(point STED is descanned)</td>
+  </select></td><td>(see section <a href="./index.html#rescan_line_sted_speed" target="_self">Rescanned line-STED speed</a>)</td>
   </tr>
 </table>
 <figcaption><strong>Figure 2: Line STED gives higher image quality than point STED for the same photodose.</strong> See <a href="./appendix.html">Appendix</a> for a description of the simulation's <a href="./appendix.html#Figure_2_parameters">parameters</a> and <a href="./appendix.html#figure_source_code">source code</a>. <strong>(a)</strong> Simulated point-STED image. <strong>(b)</strong> Simulated line-STED image using <a href="./appendix.html#Comparing_photodose">the same excitation and depletion dose</a> as (a). <strong>(c)</strong> Animated, overlaid comparison of (a) and (b). <strong>(d)</strong> <a href="./appendix.html#Comparing_image_quality">Reconstruction error vs. spatial frequency</a> for (a) (point STED, left panel) and (b) (line STED, right panel); darker pixels indicate lower error. Values along the lines drawn in (d) are plotted in <strong>(e)</strong>. Green line in (d) and (e) shows point STED reconstruction error vs. spatial frequency, blue lines show line-STED reconstruction error vs. spatial frequency along a worst-case direction (dotted blue), and a best-case direction (solid blue). <strong>(f)</strong> Point-STED PSF used for simulated imaging and deconvolution in (a). <strong>(g)</strong> Line-STED PSF(s) used for simulated imaging and deconvolution-based image fusion in (b), one for each scan direction.</figcaption>
@@ -209,7 +209,7 @@ leaving the number of scan positions (Figure 3d) as its primary speed limit. Thi
 </p>
 
 <figure id="Figure_3">
-<video width="100%" controls autoplay loop muted id="Figure_3_vid"
+<video controls autoplay loop muted style="width:100%;" id="Figure_3_vid"
  poster="./images/figure_3/descan_point_000deg_lines_1x1FOV_2p00xR_000000.svg">
  <source src="./images/figure_3/descan_point_lines_1x1FOV_2p00xR.mp4" type="video/mp4">
  Your browser doesn't support HTML5 MP4 video.
@@ -282,11 +282,11 @@ Existing eclair-based line-scanning STED techniques
 
 [<a class="citation" href="http://www.ub.uni-heidelberg.de/archiv/14362" title="4Pi Nanoscopy parallelized by line scanning; Dissertation by Franziska Curdt, supervised by Stefan Hell">Curdt 2013</a>]
 
-offer a similar tradeoff to multipoint STED (compare Figure 3d,e with <code>Imaging method: Multipoint</code> vs. <code>Imaging method: Descan line</code>), decreasing scan positions compared to point-STED at the expense of a large number of camera exposures, and spreading the signal from a single scan point across multiple detector pixels. The primary drawback of line-STED is <a href="./index.html#line_sted_is_gentler" target="_self">multiple scan directions</a> (<code>Orientations:</code> in Figure 3), but fortunately, scan orientation can be switched <a href="./appendix.html#Fast_optical_rotation">extremely rapidly</a>. The number of line-STED scan positions scales like the product of \(R\) (<code>STED resolution:</code> in Figure 3) and the largest lateral image dimension (compare Figure 3d for <code>Field of view: 1 by 1</code> vs. <code>Field of view: 2 by 2</code>), and the number of scan directions (which also scales roughly like \(R\); compare Figure 2g for several values of <code>Point-STED resolution:</code>).
+offer a qualitatively similar tradeoff to multipoint STED (compare Figure 3d,e with <code>Imaging method: Multipoint</code> vs. <code>Imaging method: Descan line</code>), decreasing scan positions compared to point-STED at the expense of a large number of camera exposures, and spreading the signal from a single scan point across multiple detector pixels. However, descanned line-STED gives several important quantitative advantages over multipoint STED. Since the image of the excitation line (Figure 3a) is descanned onto the camera, only lines within a few emission PSF widths near the center of the chip must be read for each exposure (Figure 3b), which is much faster than reading the whole chip (especially for <a href="./appendix.html#Array_detectors">sCMOS detectors</a>). Several tens of detector pixels are summed to produce each logical pixel rather than hundreds or thousands, giving a substantial decrease in <a href="./appendix.html#Summing_pixels">read noise</a> compared to multipoint-STED; this means that the gentleness advantage of line-STED over multipoint-STED is even greater than Figure 2 suggests. Also note that line-STED requires substantially less energy per depletion pulse than point-STED, since the illuminated area is one or more orders of magnitude smaller, depending on the field of view.
 </p><p>
-Descanned line-STED gives several important advantages over multipoint STED. Since the image of the excitation line (Figure 3a) is descanned onto the camera, only lines within a few emission PSF widths near the center of the chip must be read for each exposure (Figure 3b), which is much faster than reading the whole chip (especially for <a href="./appendix.html#Array_detectors">sCMOS detectors</a>). Several tens of detector pixels are summed to produce each logical pixel rather than hundreds or thousands, giving a substantial decrease in <a href="./appendix.html#Summing_pixels">read noise</a> compared to multipoint-STED; this means that the gentleness advantage of line-STED over multipoint-STED is even greater than Figure 2 suggests. Also note that line-STED requires substantially less energy per depletion pulse than point-STED, since the illuminated area is one or more orders of magnitude smaller, depending on the field of view.
+The primary drawback of line-STED vs. point-STED is the need for <a href="./index.html#line_sted_is_gentler" target="_self">multiple scan directions</a> (<code>Orientations:</code> in Figure 3), but fortunately, scan orientation can be switched <a href="./appendix.html#Fast_optical_rotation">extremely rapidly</a>. The number of line-STED scan positions scales like the product of \(R\) (<code>STED resolution:</code> in Figure 3) and the largest lateral image dimension (compare Figure 3d for <code>Field of view: 1 by 1</code> vs. <code>Field of view: 2 by 2</code>), and the number of scan directions (which also scales roughly like \(R\); compare Figure 2g for several values of <code>Point-STED resolution:</code>).
 </p>
-<h6>
+<h6 id="rescan_line_sted_speed">
 Rescanned line-STED speed</h6>
 <p>
 Line-STED improves further if we rescan the emission instead of descanning (compare Figure 3d,e with <code>Imaging method: Descan line</code> vs. <code>Imaging method: Rescan line</code>). Rescanning can be implemented similarly to rescan confocal/OPRA
