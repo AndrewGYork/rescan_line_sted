@@ -16,20 +16,20 @@ Based on this theme: https://github.com/broccolini/dinky , which mentioned that 
 
     <link rel="stylesheet" href="stylesheets/styles.css">
     <link rel="stylesheet" href="stylesheets/prism.css">
+    <!--[if lt IE 9]>
+    <script src="javascript/html5shiv/html5shiv.js"></script>
+    <![endif]-->
+    <!--[if lt IE 8]>
+      <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
     <script src="javascript/scale-fix/scale.fix.js"></script>
     <script src="javascript/python-highlighting/prism.js"></script>
     <script async  src="javascript/Minimal-MathJax/MathJax.js?config=TeX-AMS_CHTML"></script>
     <script src="javascript/update_figures.js"></script>
     <script src="javascript/reference_list/reference_list.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-    <!--[if lt IE 9]>
-    <script src="javascript/html5shiv/html5shiv.js"></script>
-    <![endif]-->
   </head>
   <body>
-    <!--[if lt IE 8]>
-      <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
-    <![endif]-->
     <div class="wrapper">
       <header>
         <h1 class="header">Rescan-line-sted</h1>
@@ -146,7 +146,7 @@ Results</h3>
 <h4 id=line_sted_is_gentler>
 Line-scanning STED is gentler than point-scanning STED</h4>
 <p>
- A gentler technique gives <a href="./appendix.html#Comparing_gentleness">higher image quality for the same photodose</a>. Unfortunately, the simplest comparison (changing Figure 1 from <code>Shape: Point</code> to <code>Shape: Line</code>) isn't fair or conclusive; line-STED decreases excitation and depletion dose compared to point-STED, but also reduces emissions per molecule and badly degrades resolution perpendicular to the scan direction.
+ A gentler technique gives <a href="./appendix.html#Comparing_gentleness">higher image quality for the same photodose</a>. Unfortunately, the <a href="./appendix.html#Bad_comparisons">simplest comparison</a> (changing Figure 1 from <code>Shape: Point</code> to <code>Shape: Line</code>) isn't fair or conclusive; line-STED decreases excitation and depletion dose compared to point-STED, but also reduces emissions per molecule and badly degrades resolution perpendicular to the scan direction.
 </p><p>
  How can we compare fairly? By <a href="./appendix.html#Figure_2_parameters">appropriate tuning</a>, we can compare line vs. point STED at <a href="./appendix.html#Comparing_photodose">equal photodose</a>. To compare <a href="appendix.html#Comparing_image_quality">image quality</a>, we simulate a standard method to handle anisotropic resolution: acquire images from multiple scan directions
 
@@ -249,7 +249,7 @@ leaving the number of scan positions (Figure 3d) as its primary speed limit. Thi
   </select></td><td>(number of scan directions, line-STED only)</td>
   </tr>
 </table>
-<figcaption><strong>Figure 3: Interactive, animated comparison of point, multipoint, descan line, and rescan line STED speed.</strong> See <a href="./appendix.html">Appendix</a> for a description of the simulation's <a href="./appendix.html#Assumptions">assumptions</a> and <a href="./appendix.html#figure_source_code">source code</a>. <strong>(a)</strong> Simulated fluorescent object (grayscale), with animation showing post-depletion excitation probability (blue, corresponding to the solid blue line in Figure 1b) and resulting excitation (green) during STED scanning. <strong>(b)</strong> Animated distribution of cumulative (grayscale) and instantaneous (green) fluorescent signal at the detector. <strong>(c)</strong> Pre-deconvolution image calculated from detector signal (grayscale), highlighting the changes due to the most recent detector measurement (green) <strong>(d)</strong> Running total of the number of scan positions used. <strong>(e)</strong> Running total of the number of camera exposures used.</figcaption>
+<figcaption><strong>Figure 3: Interactive, animated comparison of point, multipoint, descan line, and rescan line STED speed.</strong> See <a href="./appendix.html">Appendix</a> for a description of the simulation's <a href="./appendix.html#Assumptions">assumptions</a>, <a href="./appendix.html#figure_source_code">source code</a>, and a summary of its <a href="./appendix.html#Figure_3_parameters">results</a>. <strong>(a)</strong> Simulated fluorescent object (grayscale), with animation showing post-depletion excitation probability (blue, corresponding to the solid blue line in Figure 1b) and resulting excitation (green) during STED scanning. <strong>(b)</strong> Animated distribution of cumulative (grayscale) and instantaneous (green) fluorescent signal at the detector. <strong>(c)</strong> Pre-deconvolution image calculated from detector signal (grayscale), highlighting the changes due to the most recent detector measurement (green) <strong>(d)</strong> Running total of the number of scan positions used. <strong>(e)</strong> Running total of the number of camera exposures used.</figcaption>
 </figure>
 <h6>
 Multipoint-STED speed</h6>
