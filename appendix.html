@@ -11,32 +11,33 @@ Based on this theme: https://github.com/broccolini/dinky , which mentioned that 
   <head>
     <base target="_blank">
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>rescan_line_sted by AndrewGYork</title>
 
     <link rel="stylesheet" href="stylesheets/styles.css">
     <link rel="stylesheet" href="stylesheets/prism.css">
+    <!--[if lt IE 9]>
+    <script src="javascript/html5shiv/html5shiv.js"></script>
+    <![endif]-->
+    <!--[if lt IE 8]>
+      <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
     <script src="javascript/scale-fix/scale.fix.js"></script>
     <script src="javascript/python-highlighting/prism.js"></script>
     <script async  src="javascript/Minimal-MathJax/MathJax.js?config=TeX-AMS_CHTML"></script>
     <script src="javascript/update_figures.js"></script>
     <script src="javascript/reference_list/reference_list.js"></script>
+    <script src="javascript/google-analytics/analytics.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-    <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
   </head>
   <body>
     <div class="wrapper">
       <header>
         <h1 class="header">Rescan-line-sted</h1>
-        <p class="header"></p>
-
         <ul>
           <li class="download"><a class="buttons" href="https://github.com/AndrewGYork/rescan_line_sted/zipball/master">Download ZIP</a></li>
           <li><a class="buttons github" href="https://github.com/AndrewGYork/rescan_line_sted">View On GitHub</a></li>
         </ul>
-
         <p class="header">This project is maintained by <a class="header name" href="https://github.com/AndrewGYork">AndrewGYork</a></p>
       </header>
 <!-- 
@@ -125,47 +126,47 @@ Comparing image quality</h4>
 </p>
 </li><li> <strong>Which spatial frequencies are "low", and which are "high"?</strong>
 <p>
- To interpret an image, we must judge which spatial frequencies are known (low), and which are unknown (high). Which spatial frequencies survive the measurement (low-pass filtering) are primarily determined by the PSF(s) of the microscope (the filter), and the spatial frequencies amplitudes of the sample (the input to the filter). The constraint that the sample is non-negative sometimes allows us to infer spatial frequencies which are not directly measured, especially for samples with large regions of nearly-zero density.
+ To interpret an image, we must judge which spatial frequencies are known (low), and which are unknown (high). Which spatial frequencies survive the measurement (low-pass filtering) are primarily determined by the PSF(s) of the microscope (the filter), and the spatial frequency amplitudes of the sample (the input to the filter). The constraint that the sample is non-negative sometimes allows us to infer spatial frequencies which are not directly measured, especially for samples with large regions of nearly-zero density.
 </p></li></ul>
 <p>
  Asking multiple questions at once is a good way to get a bad answer, especially when the questions aren't equally difficult. Suppose I asked you the average of today's temperature, and the temperature a million years into the future. How should you answer? The best answer is probably not a number, and it's certainly not to assume that the future temperature is zero. Perhaps the best answer would be, "I don't know, and that's a dumb question; you should ask me about those quantities separately." 
 </p><p>
  Real-space metrics of image quality (for example, mean-squared error) typically ask exactly this type of mixed multiple question, asking for known low frequencies and unknown high frequencies  simultaneously, and penalizing guaranteed-to-be-wrong answers about high spatial frequencies. Low-pass filtered real-space metrics of image quality are more defensible, but the optimal choice of low-pass filter depends on the object being imaged.
 </p><p>
- A plot of reconstruction error vs. spatial frequency cleanly avoids such problems; the transition in <a href="./index.html#Figure_2">Figure 2</a>(d, e) is obvious, and known quantities are characterized separately from unknown quantities. Image quality via this metric (or any other) is certainly subjective and certainly not well-ordered. However, if one imaging method produces a larger region of known frequencies compared to another, and error is strictly lower in this region, than we can conclude the lower-error method's image quality is strictly better. In conclusion: <strong>if line STED gives a larger region of lower Fourier error compared to point STED, for the same cumulative excitation and depletion fluence, then line STED is gentler than point STED.</strong> As my simulations in <a href="./index.html#Figure_2">Figure 2</a> show, it does, for the entire range of resolution improvements I've checked.
+ A plot of reconstruction error vs. spatial frequency cleanly avoids such problems; the transition in <a href="./index.html#Figure_2">Figure 2</a>(d, e) is obvious, and known quantities are characterized separately from unknown quantities. Image quality via this metric (or any other) is certainly subjective and certainly not well-ordered. However, if one imaging method produces a larger region of known frequencies compared to another method, and error is strictly lower in this region, than we can conclude the lower-error method's image quality is strictly better. In conclusion: <strong>if line STED gives a larger region of lower Fourier error compared to point STED, for the same cumulative excitation and depletion fluence, then line STED is gentler than point STED.</strong> As my simulations in <a href="./index.html#Figure_2">Figure 2</a> show, it does, for the entire range of resolution improvements I've checked.
 </p>
 
 <h3 id="Bad_comparisons">
-Bad ways to compare "gentleness"</h3>
+Simple but potentially misleading ways to compare "gentleness"</h3>
 <p>
-A common reaction to the (admittedly complex) comparison in Figure 2 is "Why are you making this so complicated? Why not do a simple comparison, just plot [X] vs. [Y]", where X and Y are typically quantities like excitation brightness, depletion brightness, excitation dose, depletion dose, resolution improvement, etc. I've assembled a gallery of such comparisons below (generated by <code>line_sted_figure_a1.py</code> in the <a href="https://github.com/AndrewGYork/rescan_line_sted/tree/master/figure_generation"><code>rescan_line_sted</code> Github respository</a>, where I discuss why each of them is a bad or misleading comparison. The punch line: the comparison in Figure 2 is complicated because the underlying concepts are complicated; a good comparison should be as simple as possible, <a title="Ooo pithy" href="http://quoteinvestigator.com/2011/05/13/einstein-simple/">but not simpler</a>.
+A typical, reasonable reaction to the (admittedly complex) comparison in Figure 2 is "Why are you making this so complicated? Why not do a simple comparison, just plot [X] vs. [Y]", where X and Y are typically quantities like excitation brightness, depletion brightness, excitation dose, depletion dose, resolution improvement, etc. I've assembled a gallery of such comparisons below (generated by <code>line_sted_figure_a1.py</code> in the <a href="https://github.com/AndrewGYork/rescan_line_sted/tree/master/figure_generation"><code>rescan_line_sted</code> Github respository</a>), and I describe why each of them is a bad or misleading comparison. The punch line: the comparison in Figure 2 is complicated because the underlying concepts are complicated; a good comparison should be as simple as possible, <a title="Ooo pithy" href="http://quoteinvestigator.com/2011/05/13/einstein-simple/">but not simpler</a>.
 </p><p>
-Starting with the simplest possible comparison, a plot of resolution improvement \(R\) vs. peak depletion brightness for point and line STED:
+Starting with the simplest possible comparison, a plot of PSF-limited resolution improvement \(R\) vs. peak depletion brightness for point and line STED:
 </p>
 <img alt="STED resolution improvement vs. peak depletion brightness" src="./images/figure_a1/1_r_vs_depletion_brightness.svg", width="720">
 <p>
 One might be tempted to conclude that point and line STED were equally gentle, since they give the same \(R\) for the same peak depletion brightness. This is misleading, because point-STED and line-STED use very different scan patterns; the 2D raster scan of point-STED hits each molecule of the sample many times more (a) than the 1D line scan of line-STED (b):
 </p>
-<img alt="2d point-scan vs. 1d line-scan comparison" src="./images/scan_comparison.png">
+<img id="2d_vs_1s_scan" alt="2d point-scan vs. 1d line-scan comparison" src="./images/scan_comparison.png">
 <p>
-This, in turn, yields a very different dose. Since dose, rather than peak brightness, determines photodamage, perhaps we should plot \(R\) vs. depletion dose:
+This, in turn, yields a very different dose. Since dose, rather than peak brightness, typically determines photodamage, perhaps we should plot \(R\) vs. depletion dose:
 </p>
 <img alt="STED resolution improvement vs. depletion dose" src="./images/figure_a1/2_r_vs_depletion_dose.svg", width="720">
 <p>
-This comparison is highly suggestive; line-STED seems much gentler than point-STED. Unfortunately the comparison is still flawed. We have changed depletion brightness, but not scan density, so we are not satisfying the Nyquist condition. Although our PSF has shrunk, our resolution remains Nyquist-limited, and doesn't actually improve.
+This comparison is highly suggestive; line-STED seems to be much gentler than point-STED. Unfortunately the comparison is still flawed. We have varied depletion brightness, but not scan density, so we are not satisfying the Nyquist condition. Although our PSF has shrunk, our resolution remains Nyquist-limited, and doesn't actually improve.
 </p><p>
 To compare more meaningfully, we must increase our scan density as we increase our depletion brightness, in order to maintain a constant number of samples per STED PSF:
 </p>
 <img alt="STED resolution improvement vs. depletion dose, with variable step size" src="./images/figure_a1/3_r_vs_depletion_dose_variable_steps.svg", width="720">
 <p>
-Now line-STED seems <em>much</em> gentler than point-STED! (In fact, a plot like this was my first inspiration to pursue this project.) The difference between the two methods is now so large it's difficult to see them on a linear scale. The same data, as a semilog plot:
+Now line-STED seems <em>much</em> gentler than point-STED! (In fact, a plot like this was my first inspiration to pursue this project.) The difference between the two methods is now so large it's difficult to compare them on a linear scale. The same data, as a semilog plot:
 </p>
 <img alt="STED resolution improvement vs. depletion dose, with variable step size, semilog scale" src="./images/figure_a1/4_r_vs_log_depletion_dose_variable_steps.svg", width="720">
 
 <p>
-Unfortunately the comparison is <em>still</em> flawed. Increasing both depletion brightness and scan density improves resolution, but greatly decreases the emitted signal per molecule (you can verify this for yourself via Figure 1). In practice, one always increases excitation brightness as one increases depletion brightness, to maintain a usable SNR. 
+Unfortunately the comparison is <em>still</em> flawed. Increasing both depletion brightness and scan density improves resolution, but greatly decreases the emitted signal per molecule (you can explore this tradeoff via Figure 1). In practice, one always increases excitation brightness as one increases depletion brightness, to maintain a usable SNR. 
 </p><p>
-It's an interesting question how much we should increase excitation brightness. For the sake of simplicity, let's suppose we want to keep the expected number of emission per molecule constant. Plotted on a linear scale, this yields:
+It's an interesting question how much we should increase excitation brightness as we increase depletion brightness. For the sake of simplicity, let's suppose we want to keep the expected number of emission per molecule constant. Plotted on a linear scale, this yields:
 </p>
 <img alt="STED resolution improvement vs. depletion dose, with variable step size and variable excitation intensity" src="./images/figure_a1/5_r_vs_depletion_dose_variable_steps_variable_exc.svg", width="720">
 <p>
@@ -185,7 +186,7 @@ line-STED, which further improves \(R\), especially at low depletion dose. Resca
 </p><p>
 What about the number of scan orientations required for line-STED? As we see from Figure 2g, the number of orientations to maintain image quality scales roughly like \(R\). Superficially, it seems we have to multiply the line-STED dose by the number of orientations, which would presumably eliminate most of the gentleness advantage of line-STED. Fortunately this is not the case; you can split the same number of excitation/depletion pulse pairs across as many scan orientations as you'd like, while delivering the same total dose. (Remember that we're holding expected emissions per molecule constant in our comparison). As long as the number of excitation/depletion pulse pairs per scan position is larger than the number of scan orientations (which it always is in Figure 2, and in practice), excitation/depletion dose is independent of the number of scan orientations.
 </p><p>
-We've almost achieved a fair comparison; the remaining problem is that we'd like to compare <a href="./appendix.html#Comparing_image_quality" target="_self">image quality</a>, but our plots here only compare \(R\). As discussed above, image quality is inherently a multidimensional quantity that can't be boiled down to a single number, which brings us to the comparison presented in Figure 2 (which also considers excitation dose, which I glossed over here).
+We've almost achieved a fair comparison; the remaining problem is that we'd like to compare <a href="./appendix.html#Comparing_image_quality" target="_self">image quality</a> vs. photodose, but our plots here only compare \(R\) vs. depletion dose. As discussed above, image quality is inherently a multidimensional quantity that can't be boiled down to a single number, which brings us to the comparison presented in Figure 2 (which also considers excitation dose, which I glossed over here).
 </p><p>
 <em>That's</em> why Figure 2 is so complicated.
 </p>
@@ -193,11 +194,11 @@ We've almost achieved a fair comparison; the remaining problem is that we'd like
 <h3 id=Figure_2_parameters>
 Figure 2 simulation parameters</h3>
 <p>
- As discussed above, <a href="appendix.html#Tuning_STED" target="_self">a correctly tuned STED microscope</a> doesn't have as many degrees of freedom as Figure 1 suggests. In <a href="index.html#Figure_2">Figure 2</a>, rather than choose <code>Excitation</code>, <code>Depletion</code>, <code>Scan Density</code>, and <code>Exposure time</code> independently, we instead choose a desired resolution improvement and signal level for descan point-STED, and <a href="appendix.html#tune_psf()" target="_self">my code</a> solves for the inputs which will give this output. To avoid excessive excitation dose or depletion dose, we minimize <code>Exposure time</code> subject to the constraint that <code>Excitation &lt; 0.25</code>.
+ As discussed above, <a href="appendix.html#Tuning_STED" target="_self">a correctly tuned STED microscope</a> doesn't have as many degrees of freedom as Figure 1 suggests. In <a href="index.html#Figure_2">Figure 2</a>, rather than choose <code>Excitation</code>, <code>Depletion</code>, <code>Scan Density</code>, and <code>Exposure time</code> independently, I instead choose a desired resolution improvement and signal level for descan point-STED, and <a href="appendix.html#tune_psf()" target="_self">my code</a> solves for the inputs which will give this output. To avoid excessive excitation dose or depletion dose, I minimize <code>Exposure time</code> subject to the constraint that <code>Excitation &lt; 0.25</code>.
 </p><p>
  After parameters are chosen for point-STED, I choose resolution improvement and signal level for descan and rescan line-STED that will give <a href="./appendix.html#Comparing_photodose" target="_self">the same excitation and depletion dose</a> as point-STED, and my code solves for the inputs which will give this output, subject to the same minimization of <code>Exposure time</code> and constraint that <code>Excitation &lt; 0.25</code>. For each comparison, I choose the number of line-STED orientations to give <a href="./appendix.html#Comparing_image_quality" target="_self">strictly better image quality</a> than point-STED; this number increases with increased resolution.
 </p><p>
- Note that we could use fewer orientations to increase acquisition speed and reduce depletion dose at the expense of "strictly better" image quality (some directions would have worse resolution than point STED, some would have better). In my experience, many real-life imaging challenges tolerate substantial resolution anisotropy. Here, my goal is the cleanest comparison of gentleness between point-STED and line-STED, so I stick to comparisons which are well-ordered.
+ Note that we could use fewer orientations to increase acquisition speed at the expense of "strictly better" image quality (some directions would have worse resolution than point STED, some would have better). In my experience, many real-life imaging challenges tolerate substantial resolution anisotropy. Here, my goal is the cleanest comparison of gentleness between point-STED and line-STED, so I stick to comparisons which are well-ordered.
 </p><p>
 The table below summarizes the resulting parameters used in <a href="./index.html#Figure_2">Figure 2</a>. The punchline: anything point-STED can do, line-STED can do better.
 </p>
@@ -385,11 +386,11 @@ Several times in the article, I describe shapes by reference to pastries. In cas
 <h3 id="figure_source_code">
 Code: <code>line_sted_figure_1.py</code>, <code>line_sted_figure_2.py</code>, <code>line_sted_figure_3.py</code></h3>
 <p>
-The data for Figures 1, 2, and 3 are created by running the corresponding Python 3 modules <code>line_sted_figure_1.py</code>, <code>line_sted_figure_2.py</code>, and <code>line_sted_figure_3.py</code>. You can view these modules in the <a href="https://github.com/AndrewGYork/rescan_line_sted/tree/master/figure_generation"><code>rescan_line_sted</code> Github respository</a>. If you want to run or modify this code yourself, you'll need a <a href="https://www.python.org/downloads/">Python 3 environment</a>, and also the Python subpackages <a href="http://www.numpy.org/">Numpy</a>, <a href="https://www.scipy.org/">Scipy</a>, and <a href="http://matplotlib.org/">Matplotlib</a>. <a href="https://www.continuum.io/downloads">Anaconda</a> satisfies these requirements with a single installation; if you're new to Python, this is the approach I recommend.
+The data for Figures 1, 2, and 3 are created by running the corresponding Python 3 modules <code>line_sted_figure_1.py</code>, <code>line_sted_figure_2.py</code>, and <code>line_sted_figure_3.py</code>. You can view these modules in the <a href="https://github.com/AndrewGYork/rescan_line_sted/tree/master/figure_generation"><code>rescan_line_sted</code> Github respository</a>. If you want to run/modify this code yourself, you'll need a <a href="https://www.python.org/downloads/">Python 3 environment</a>, and also the Python subpackages <a href="http://www.numpy.org/">Numpy</a>, <a href="https://www.scipy.org/">Scipy</a>, and <a href="http://matplotlib.org/">Matplotlib</a>. <a href="https://www.continuum.io/downloads">Anaconda</a> satisfies these requirements with a single installation; if you're new to Python, this is the approach I recommend. Make sure to get the Python 3 version of Anaconda; Python 2 and 3 are  (slightly) different languages, and my code is written in Python 3.
 </p><p>
 Once you've set up an appropriate Python 3 environment (including Numpy, Scipy, and Matplotlib), download and unzip the <a href="https://github.com/AndrewGYork/rescan_line_sted/zipball/master"><code>rescan_line_sted</code> repository</a>, navigate to the <code>figure_generation</code> directory, and execute the three figure generation scripts. They take quite a while to run (especially <code>line_sted_figure_3.py</code>), print a lot of gibberish to the console, and they generate a lot of output files (>10,000 files, >4 GB). Their output will be placed in a directory called <code>big_images</code>, which will be two levels up from the <code>figure_generation</code> directory (the same level as the <code>master</code> directory you unzipped).
 </p><p>
-Most of this output is in <code>.svg</code> format, which Matplotlib generates directly. Some of the output is in <code>.gif</code> or <code>.mp4</code> format, which Matplotlib doesn't generate directly, so I generate <code>.svg</code> from Matplotlib and then my Python code calls <a href="https://www.imagemagick.org/script/index.php">ImageMagick</a> and <a href="https://www.ffmpeg.org/">ffmpeg</a> to convert to <code>.gif</code> and <code>.mp4</code>, respectively. If you want to do these conversions yourself, you'll have to install ImageMagick and ffmpeg, and you might have to modify the parts of my Python script that call ImageMagick and ffmpeg, if they're called differently on your OS then on mine. <a href="mailto:andrew.g.york+linerescan@gmail.com" target="_self">Email me</a> if this is both challenging and important to you.
+Most of this output is in <code>.svg</code> format, which Matplotlib generates directly. Some of the output is in <code>.gif</code> or <code>.mp4</code> format, which Matplotlib doesn't generate directly, so I generate <code>.svg</code> from Matplotlib and then my Python code calls <a href="https://www.imagemagick.org/script/index.php">ImageMagick</a> and <a href="https://www.ffmpeg.org/">ffmpeg</a> to convert to <code>.gif</code> and <code>.mp4</code>, respectively. If you want to do these conversions yourself, you'll have to install ImageMagick and ffmpeg, and you might have to modify the parts of my Python script that call ImageMagick and ffmpeg, if they're called differently on your OS than on mine. <a href="mailto:andrew.g.york+linerescan@gmail.com" target="_self">Email me</a> if this is both challenging and important to you.
 </p><p>
 Note that my figure generation code is mostly concerned with formatting the figures; you don't have to understand this code to understand my calculations. If you want to understand the calculations which the paper is based on, I recommend focusing on <code>line_sted_tools.py</code>, described below.
 </p>

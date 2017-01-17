@@ -26,7 +26,7 @@ def r_vs_depletion_brightness():
     """A plot of resolution improvement vs. depletion intensity, for
     fixed step size and excitation brightness, and a single line-STED
     orientation: """
-    depletion_brightnesses = np.linspace(0, 18, 200)
+    depletion_brightnesses = np.linspace(0, 18, 75)
     resolution_improvement = {'point': [],
                               'line': []}
     for depletion_brightness in depletion_brightnesses:
