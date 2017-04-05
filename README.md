@@ -7,7 +7,7 @@ This repository is intended to hold a (mostly) self-contained scientific publica
 
 * HTML, javascript, CSS, and small images (index.html, appendix.html, and the javascript/stylesheets/images directories)
 * A (limited) PDF version of the publication; note that this does not include animated/interactive figures.
-* Code which produces figures (in the `figure_code` directory)
+* Code which produces figures (in the `figure_code` directory). You can run and modify this code to verify and explore my results. See the `README.md` file in the `figure_code` directory for instructions how to run the code.
 
 Some files aren't suitable for version control, (e.g. raw data, large numbers of pre-rendered figure images, etc). These are stored in a sister repository:
 
