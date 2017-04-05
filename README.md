@@ -1,7 +1,9 @@
 # Line-rescanned STED microscopy is gentler and faster than point-descanned STED microscopy
 
-A scientific publication, describing a way to improve microscopy. This repository hosts everything you need to reproduce my results. Read the publication here:
-https://andrewgyork.github.io/rescan_line_sted
+A scientific publication, describing a way to improve microscopy. This repository hosts everything you need to reproduce our results. Read the publication here:
+https://calico.github.io/rescan_line_sted (hosted via the Calico Labs institutional GitHub account)
+or here:
+https://andrewgyork.github.io/rescan_line_sted (hosted via Andrew York's personal GitHub account)
 
 This repository is intended to hold a (mostly) self-contained scientific publication. It contains:
 
