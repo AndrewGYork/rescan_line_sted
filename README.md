@@ -5,7 +5,7 @@ https://andrewgyork.github.io/rescan_line_sted
 
 This repository is intended to hold a (mostly) self-contained scientific publication. It contains:
 
-* HTML, javascript, CSS, and small images (`index.html`, `appendix.html`, and the `javascript`/`stylesheets`/`images` directories)
+* HTML, javascript, CSS, and small images (`index.html`, `appendix.html`, and the `javascript`, `stylesheets`, and `images` directories)
 * A (limited) PDF version of the publication; note that this does not include animated/interactive figures.
 * Code which produces figures (in the `figure_code` directory). You can run and modify this code to verify and explore my results. See `figure_code/README.md` for instructions how to run the figure generation code.
 

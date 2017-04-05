@@ -3,7 +3,7 @@
 var big_image_directory = "./../big_images";
 var img = new Image();
 img.onerror = function() {
-  window.big_image_directory = "https://andrewgyork.github.io/line-rescan-sted-data/big_images";
+  window.big_image_directory = "https://andrewgyork.github.io/rescan_line_sted_data";
   img.src = big_image_directory + "/figure_1/point_1p00exc_9p00dep_008samps_001pulses.svg"
   img.onerror = ""
 }
