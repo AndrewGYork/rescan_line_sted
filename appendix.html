@@ -612,7 +612,7 @@ Unfortunately, <a href="./appendix.html#psf_report()" target="_self"><code>psf_r
     results.update(args) #Combine the two dictionaries
     return results
 </code></pre><p>
-The workhorse of the optimization loop is <a href="https://docs.scipy.org/doc/scipy-0.18.1/reference/generated/scipy.optimize.minimize_scalar.html"><code>scipy.optimize.minimize_scalar()</code></a>, which alternates between tuning the depletion brightness to control resolution and tuning excitation brightness to control signal. Since depletion brightness also affects signal, and tuning excitation brightness (weakly) affects resoluion, we alternate tuning until our result is sufficiently close to our goal.
+The workhorse of the optimization loop is <a href="https://docs.scipy.org/doc/scipy-0.18.1/reference/generated/scipy.optimize.minimize_scalar.html"><code>scipy.optimize.minimize_scalar()</code></a>, which alternates between tuning the depletion brightness to control resolution and tuning excitation brightness to control signal. Since depletion brightness also affects signal, and tuning excitation brightness (weakly) affects resolution, we alternate tuning until our result is sufficiently close to our goal.
 </p>
 
 <h4>
@@ -621,7 +621,7 @@ Class: <code>Deconvolver()</code></h4>
 
 [<a class="citation" href="http://dx.doi.org/10.1002/cphc.201300831" title="Richardson–Lucy Deconvolution as a General Tool for Combining Images with Complementary Strengths; Maria Ingaramo, Andrew G. York, Eelco Hoogendoorn, Marten Postma, Hari Shroff, George H. Patterson; ChemPhysChem Volume 15, Issue 4, pages 794–800, March 17, 2014">Ingaramo 2014</a>].
 </p><p>
-Also, as <a href="./appendix.html#Comparing_image_quality" target="_self">discussed above</a>, deconvolution is neccesary to compare how accurately point-STED and line-STED measure the low spatial frequencies of the test object, since every spatial frequency is systematically underestimated by the measurement process.
+Also, as <a href="./appendix.html#Comparing_image_quality" target="_self">discussed above</a>, deconvolution is neccesary to compare how accurately point-STED and line-STED measure the low spatial frequencies of the test object, since every non-DC spatial frequency is systematically underestimated by the measurement process.
 </p>
 <pre><code class="language-python">
 class Deconvolver:
