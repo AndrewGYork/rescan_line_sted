@@ -318,7 +318,9 @@ Rescanned line-STED promises a strict improvement vs. point-STED, mulitpoint-STE
 </p><p>
 It's interesting to note that although line-STED gives strictly less information per emission than point-STED, it gives strictly more information for a given photodose (Figure 2). We speculate that this advantage of lines vs. points (or eclairs vs. doughnuts) may extend to other contexts (e.g. particle tracking
 
-[<a class="citation" href="https://dx.doi.org/10.1126/science.aak9913" title="Nanometer resolution imaging and tracking of fluorescent molecules with minimal photon fluxes; Francisco Balzarotti, Yvan Eilers, Klaus C. Gwosch, Arvid H. Gynnå, Volker Westphal, Fernando D. Stefani, Johan Elf, Stefan W. Hell; Science 22 Dec 2016">Balzarotti 2016</a>]). Perhaps the story does not end at lines and points, and the study of a wider variety of illumination shapes
+[<a class="citation" href="https://dx.doi.org/10.1126/science.aak9913" title="Nanometer resolution imaging and tracking of fluorescent molecules with minimal photon fluxes; Francisco Balzarotti, Yvan Eilers, Klaus C. Gwosch, Arvid H. Gynnå, Volker Westphal, Fernando D. Stefani, Johan Elf, Stefan W. Hell; Science 22 Dec 2016">Balzarotti 2016</a>]).
+
+ Perhaps the story does not end at lines and points, and the study of a wider variety of illumination shapes
 
 [<a class="citation" href="https://doi.org/10.1364/OE.23.031367" title="Studying different illumination patterns for resolution improvement in fluorescence microscopy; Nadya Chakrova, Rainer Heintzmann, Bernd Rieger, and Sjoerd Stallinga; Optics Express Vol. 23, Issue 24, pp. 31367-31383 (2015)">Chakrova 2015</a>]
 
@@ -331,6 +333,11 @@ could identify even more optimized approaches
 <h3>
 <a href="./appendix.html">Appendix</a></h3>
 <p>Additional details and discussion can be found in the <a href="./appendix.html">Appendix</a>, which is also referenced via hyperlinks throughout this article.</p>
+
+<h3>
+Updates</h3>
+<p>Egner et al. described "<a href="http://www.focusonmicroscopy.org/2017/PDF/1400_Egner.pdf">tomographic STED microscopy</a>" at the 2017 Focus on Microscopy conference. Tomographic STED was conceived and demonstrated independently from this article, and differs in many important ways from rescanned line-STED, but still beautifully experimentally demonstrates several of the principles we simulate here. Their method is a type of point-descanned STED using a 1D depletion pattern, which enlarges the emission region at the cost of anisotropic resolution. They reduce anisotropy by merging multiple orientations of the 1D depletion pattern via iterative deconvolution, yielding a single high-quality image. Their method improves both speed and gentleness compared to a standard depletion "doughnut", and the hardware is sufficiently similar to existing STED that it may be straightforward for others to implement.
+</p>
 
 </section>
 
